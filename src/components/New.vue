@@ -43,7 +43,7 @@
 
     section:hover{
         box-shadow: 0 5px 10px #00e676;
-       transform: translateY(6px);
+        transform: translateY(6px);
     }
     
 </style>

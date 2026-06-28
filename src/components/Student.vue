@@ -49,9 +49,9 @@
             <th>parcours</th>
             <th>Email</th>
             <th>anne_univ</th>
-            <th>design</th>
             <th>note</th>
-            <th>status</th>
+            <th>design</th>
+            
            
         </tr>
         <tr>
@@ -62,9 +62,8 @@
             <td>GB</td>
             <td>JohnDoe@gmail.com</td>
             <td>2025-2026</td>
-            <td>soutenance</td>
             <td>18</td>
-            <td>validé</td>
+            <td>Validé</td>
             <td class="btnEvent">
                 <button class="update"><img src="/src/assets/icons8-modifier-24.png"></button>
                 <button class="delete"><img src="/src/assets/icons8-supprimer-24.png"></button>
