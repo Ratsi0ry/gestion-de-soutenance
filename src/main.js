@@ -12,7 +12,7 @@ import Prof from './components/Prof.vue'
 const app = createApp(App)
 
 const routes = [  
-    {path: '/', component: Sdt},
+    {path: '/', component: New},
     {path: '/sdt', component: Sdt},
     {path: '/session', component: Session},
     {path: '/prof', component: Prof},
