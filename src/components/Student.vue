@@ -54,30 +54,146 @@
             
            
         </tr>
-        <tr>
-            <td>3333</td>
-            <td>John</td>
-            <td>Doe</td>
-            <td>L3</td>
-            <td>GB</td>
-            <td>JohnDoe@gmail.com</td>
-            <td>2025-2026</td>
-            <td>18</td>
-            <td>Validé</td>
+        <tr v-for="student in students" :key="student.matr">
+            <td>
+                <span v-if="!edit[student.matr]">{{ student.matr }}</span>
+                <input type="text" v-else v-model="student.matr">
+            </td>
+            <td>
+                <span v-if="!edit[student.name]">{{student.name }}</span>
+                <input type="text" v-else v-model="student.name">
+            </td>
+            <td>
+                <span v-if="!edit[student.fstName]">{{ student.fstName }}</span>
+                <input type="text" v-else v-model="student.fstName">
+            </td>
+            <td>
+                <span v-if="!edit[student.level]">{{ student.level }}</span>
+                <input type="text" v-else v-model="student.level">
+            </td>
+            <td>
+                <span v-if="!edit[student.class]">{{ student.class }}</span>
+                <input type="text" v-else v-model="student.class">
+            </td>
+            <td>
+                <span v-if="!edit[student.email]">{{ student.email }}</span>
+                <input type="text" v-else v-model="student.email">
+            </td>
+            <td>
+                <span v-if="!edit[student.years]">{{ student.years }}</span>
+                <input type="text" v-else v-model="student.years">
+            </td>
+            <td>
+                <span v-if="edit[student.score]">{{ student.score }}</span>
+                <input type="text" v-else v-model="student.score">
+            </td>
+            <td>
+                <span v-if="status[student.status]">{{ student.status }}</span>
+                <input type="text" v-else v-model="student.status">
+            </td>
             <td class="btnEvent">
-                <button class="update"><img src="/src/assets/icons8-modifier-24.png"></button>
-                <button class="delete"><img src="/src/assets/icons8-supprimer-24.png"></button>
+                <button @click="update(client)" class="update"><img src="/src/assets/icons8-modifier-24.png">{{ edit[student.id] ? 'sauvegarder' : ''}}</button>
+                <button @click="remove(client.matr)" class="delete"><img src="/src/assets/icons8-supprimer-24.png"></button>
             </td> 
         </tr>
     </table>
+    <p v-if="msg">{{ msg }}</p>
     </div>
 
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
+const students = ref([])
+const edit = ref({})
+const msg = ref('')
 
-const show = ref(false)
+const fetchStudents = async()=>{
+    try{
+        const response = await fetch('http://localhost:8000/student.php')
+        const result = await response.json()
+
+        if(result.status == 'success'){
+            students.value = result.data1
+            infos.value = result.data2
+            console.log("Affichages des etudiants reussie")
+        }else{
+            console.error('Erreur: ', result.msg)
+        }
+    }catch(error){
+        console.error(  "Impossible de recupérer les données")
+    };
+}
+
+onMounted(()=>{
+    fetchStudents()
+})
+
+const update = async(student)=>{
+    if(!edit[student.matr]){
+        edit[student.matr].value = true
+    }else{
+        try{
+            const response = await fetch('http://localhost:8000/student.php?action=update',{
+                method: 'POST',
+                headers: {
+                    'Content-Type' : 'application/json'
+                },
+                body: JSON.stringify({
+                    matr: student.matr,
+                    name: student.name,
+                    fstName: student.fstName,
+                    level: student.level,
+                    class: student.class,
+                    email: student.email,
+                    years: student.years,
+                    score: student.score,
+                    status: student.status
+                })
+            })
+
+            const result = await response.json()
+            msg.value = result.message
+
+            if(result.status == 'success'){
+                edit[student.value] = false
+            }else{
+                alert("erreur" + result.message)
+            }
+
+        }catch(error){
+            console.error()
+        }
+    }
+}
+
+const remove = async(matr)=>{
+    if(confirm("Cette ligne va être supprimé")){
+        try{
+            const response = await fetch('http://localhost:8000/student.php?action=delete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type' : 'application/json'
+                },
+                body: JSON.stringify({matr: matr})
+            })
+
+            const result = await response.json();
+            msg.value = result.message
+
+            if(result.status == success){
+                const index = students.value.findIndex(c=> c.matr == matr) //finIndex: trouvé l'id corresponant dans le tableau
+                if(index >-1){
+                students.value.splice(index, 1)}
+                msg.value="Client supprimé de la base de donnéé"
+            }
+
+        }catch(error){
+            console.error('Erreur de suppression')
+            msg.value = 'Impossible de supprimer la ligne'
+        }
+    }
+}
 </script>
 <style scoped>
 
