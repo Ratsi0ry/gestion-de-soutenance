@@ -73,7 +73,7 @@
                 <div class="finalBtn">
                     <button type="reset" class="btnReset"><img src="/src/assets/icons8-rendez-vous-périodique-24.png" alt=""></button>
                     <button type="submit" class="btnSubmit">Valider</button>
-                    <button id="downloadPdf"><img src="/src/assets/icons8-export-pdf-36.png"></button>
+                    <!--<button id="downloadPdf"><img src="/src/assets/icons8-export-pdf-36.png"></button>-->
                 </div>
 
             </div>
@@ -160,6 +160,10 @@
         border: green;
         border-radius: 8px;
         padding: 0.5rem;
+    }
+    .btnSubmit:active, .btnReset:active{
+        transform: scale(0);
+        transition: 0.2s ease-in-out;
     }
 
     .logo{

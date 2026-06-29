@@ -41,7 +41,7 @@
             <input type="email" id="email" required><br><br><br>
 
             <div class="ok">
-                <button type="reset" class="btnReset"><img src="/src/assets/icons8-rendez-vous-périodique-24.png" alt=""></button>
+                <button type="reset" class="btnReset"><img src="/src/assets/icons8-rendez-vous-périodique-24-black.png" alt=""></button>
                 <button type="submit" class="btnSubmit">Valider</button>
             </div>
         </div>

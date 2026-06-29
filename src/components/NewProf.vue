@@ -20,7 +20,7 @@
                     <option value="Mme">Mme</option>
                 </select>
             </div>
-        </div><br>
+            </div><br>
 
             <label for="name">Nom :</label><br>
             <input type="text" id="name" required><br><br>
@@ -39,7 +39,7 @@
             </select><br><br>
 
             <div class="ok">
-                <button type="reset" class="btnReset"><img src="/src/assets/icons8-rendez-vous-périodique-24.png" alt=""></button>
+                <button type="reset" class="btnReset"><img src="/src/assets/icons8-rendez-vous-périodique-24-black.png" alt=""></button>
                 <button type="submit" class="btnSubmit">Valider</button>
             </div>
         </div>
