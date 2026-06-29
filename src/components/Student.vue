@@ -114,8 +114,7 @@ const fetchStudents = async()=>{
         const result = await response.json()
 
         if(result.status == 'success'){
-            students.value = result.data1
-            infos.value = result.data2
+            students.value = result.data
             console.log("Affichages des etudiants reussie")
         }else{
             console.error('Erreur: ', result.msg)
