@@ -3,7 +3,7 @@
     <div class="item1">
         <div class="pt1">
             <label for="search"></label>
-            <input type="search" id="search" placeholder=" Rechercher nom/matricule">
+            <input type="search" id="search" v-model="search" placeholder=" Rechercher nom/matricule">
         </div>
 
         <div class="pt2">
@@ -103,34 +103,42 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 const students = ref([])
 const edit = ref({})
 const msg = ref('')
+const search= ref('')
 
-const fetchStudents = async()=>{
+const fetchStudents = async(query = '') => {
     try{
-        const response = await fetch('http://localhost:8000/student.php')
+        const url = query 
+        ? `http://localhost:8000/search.php?q=${encodeURIComponent(query)}`
+        : 'http://localhost:8000/search.php';
+
+        const response  = await fetch(url)
         const result = await response.json()
 
         if(result.status == 'success'){
             students.value = result.data
-            console.log("Affichages des etudiants reussie")
-        }else{
-            console.error('Erreur: ', result.msg)
+        } else {
+            console.error("Erreur", result.message);
         }
-    }catch(error){
-        console.error(  "Impossible de recupérer les données")
-    };
+    } catch(error){
+        console.error("Impossible de récupérer les données", error)
+    }
 }
 
-onMounted(()=>{
+watch(search, (newValue) => {
+    fetchStudents(newValue.trim());
+});
+
+onMounted(() => {
     fetchStudents()
 })
 
 const update = async(student)=>{
-    if(!edit[student.matr]){
-        edit[student.matr].value = true
+    if(!edit.value[student.matr]){
+        edit.value[student.matr] = true
     }else{
         try{
             const response = await fetch('http://localhost:8000/student.php?action=update',{
@@ -155,13 +163,13 @@ const update = async(student)=>{
             msg.value = result.message
 
             if(result.status == 'success'){
-                edit[student.value] = false
+                edit.value[student.matr] = false
             }else{
                 alert("erreur" + result.message)
             }
 
         }catch(error){
-            console.error()
+            console.error("Impossible de modifier les données", error)
         }
     }
 }
@@ -180,11 +188,10 @@ const remove = async(matr)=>{
             const result = await response.json();
             msg.value = result.message
 
-            if(result.status == success){
+            if(result.status == 'success'){
                 const index = students.value.findIndex(c=> c.matr == matr) //finIndex: trouvé l'id corresponant dans le tableau
                 if(index >-1){
                 students.value.splice(index, 1)}
-                msg.value="Client supprimé de la base de donnéé"
             }
 
         }catch(error){
@@ -222,13 +229,6 @@ const remove = async(matr)=>{
         padding-left:1.2rem;
         padding-right: 1.2rem;
     }
-
-    /*.stdTotal{
-        background-color: rgb(188, 189, 189);
-        width: 100px;
-        padding: 0.3rem;
-        border-radius: 5px;
-    }*/
 
     .item1{
         display: grid;
