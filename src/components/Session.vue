@@ -73,7 +73,7 @@
                 <div class="finalBtn">
                     <button type="reset" class="btnReset"><img src="/src/assets/icons8-rendez-vous-périodique-24.png" alt=""></button>
                     <button type="submit" class="btnSubmit">Valider</button>
-                    <!--<button id="downloadPdf"><img src="/src/assets/icons8-export-pdf-36.png"></button>-->
+                   <button @click="printPdf" id="downloadPdf"><img src="/src/assets/icons8-pdf-2-36.png" alt=""></button>
                 </div>
 
             </div>
@@ -83,6 +83,18 @@
     </form>
 
 </template>
+
+<script setup>
+    import { useRouter } from 'vue-router'
+
+    const router = useRouter()
+
+    const printPdf = ()=> {
+        router.push({
+            path: '/pagePdf'
+        })
+    }
+</script>
 
 <style scoped>
     .sessionContent{

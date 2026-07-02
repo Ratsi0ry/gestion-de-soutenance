@@ -7,19 +7,19 @@
         </div>
 
         <div class="pt2">
-            <label for="sort">Niveau :</label>
-            <select name="sortSdt" id="sort">
-            <option value="L1">L1</option>
-            <option value="L2">L2</option>
-            <option value="L3">L3</option>
-            <option value="M1">M1</option>
-            <option value="M2">M2</option>
+            <label for="sortSdt">Niveau :</label>
+            <select name="sortSdt" id="sort" v-model="selectedLevel" @change="fetchSelectedValue">
+                <option value="L1">L1</option>
+                <option value="L2">L2</option>
+                <option value="L3">L3</option>
+                <option value="M1">M1</option>
+                <option value="M2">M2</option>
         </select>
         </div>
 
         <div class="pt3">
-            <label for="course">Parcours :</label>
-            <select name="course" id="course">
+            <label for="class">Parcours :</label>
+            <select name="class" id="course" v-model="selectedClass" @change="fetchSelectedValue">
                 <option value="GB">GB</option>
                 <option value="SR">SR</option>
                 <option value="IG">IG</option>
@@ -28,14 +28,15 @@
 
         <div class=" pt4">
             <label for="success">trier par:</label>
-            <select name="suceess" id="success">
+            <select name="success" id="success" v-model="selectedStat" @change="fetchSelectedValue">
                 <option value="opt1">soutenance reussi</option>
                 <option value="opt2">soutenance en attente</option>
             </select>
         </div>
 
         <div class="pt5">
-           <h4>Total effectif par Niveau</h4>
+           <h4 v-if="selectedClass || selectedLevel || selectedStat">{{ totalStudents }}</h4>
+           <h4 v-else{{ totalStudents }}></h4>
         </div>
     </div>
 
@@ -108,6 +109,30 @@ const students = ref([])
 const edit = ref({})
 const msg = ref('')
 const search= ref('')
+const selectedLevel = ref('')
+const selectedClass = ref('')
+const selectedStat = ref('')
+const totalStudents = ref(0)
+
+const fetchSelectedValue = async() => {
+    try{
+        const response = await fetch(`http://localhost:8000/filter.php?level=${selectedLevel.value}&class=${selectedClass.value}&stat=${selectedStat.value}`)
+        const result = await response.json()
+
+        if(result.status == 'success'){
+            students.value = result.data
+            totalStudents.value = result.totalCount
+        } else{
+            console.error("Erreur", result.message)
+        }
+    }catch(error){
+        console.error("Impossible de filtrer par niveau")
+    }
+}
+
+onMounted(()=>{
+    fetchSelectedValue()
+})
 
 const fetchStudents = async(query = '') => {
     try{
@@ -120,6 +145,7 @@ const fetchStudents = async(query = '') => {
 
         if(result.status == 'success'){
             students.value = result.data
+            
         } else {
             console.error("Erreur", result.message);
         }
