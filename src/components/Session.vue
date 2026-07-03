@@ -1,25 +1,25 @@
 <template>
 
-    <form>
+    <form @submit.prevent="submitSession">
 
         <div class="sessionContent">
             <div class="container">
                 <p  class="logo"><img src="/src/assets/icons8-salle-de-réunion-38.png" alt=""></p>
                 <label for="matr">Matricule</label><br>
-                <input type="text" id="matr"><br><br>
+                <input type="text" id="matr" v-model="matr"><br><br>
 
                 <label for="org">idorg</label><br>
-                <input type="number" id="org"><br><br>
+                <input type="number" id="org" v-model="idorg"><br><br>
 
                 <label for="room">Lieu</label><br>
-                <input type="text" id="room"><br><br>
+                <input type="text" id="room" v-model="room"><br><br>
 
                 <div class="years">
                     <div>
                         <label for="year">Année univ :</label>
                     </div>
                     <div>
-                        <input type="text" id="year" placeholder="2025-2026">
+                        <input type="text" id="year" placeholder="2025-2026 " v-model="years">
                     </div>
                 </div><br>
 
@@ -28,7 +28,7 @@
                         <label for="score">Note attribuéé:</label>
                     </div>
                     <div>
-                        <input type="number" id="score" placeholder="note/20">
+                        <input type="number" id="score" placeholder="note/20" v-model="score">
                     </div>
                 </div><br>
 
@@ -45,11 +45,11 @@
                         <p>Examinateurs :</p>
                     </div>
                     <div>
-                        <input type="checkbox" id="auditors" class="chx" value="e1">
+                        <input type="checkbox" id="auditors" class="chx" value="01" v-model="a1">
                         <label for="auditors">01</label>
-                        <input type="checkbox" id="auditors" class="chx" value="e2">
+                        <input type="checkbox" id="auditors" class="chx" value="02" v-model="a2">
                         <label for="auditors">02</label>
-                        <input type="checkbox" id="auditors" class="chx" value="e3">
+                        <input type="checkbox" id="auditors" class="chx" value="03" v-model="a3">
                         <label for="auditors">03</label>
                     </div>
                 </div>
@@ -59,11 +59,11 @@
                         <p>Rapporteurs :</p>
                     </div>
                     <div>
-                        <input type="checkbox" id="reporters" class="chx" value="01">
+                        <input type="checkbox" id="reporters" class="chx" value="01" v-model="r1">
                         <label for="reporters">01</label>
-                        <input type="checkbox" id="reporters" class="chx" value="02">
+                        <input type="checkbox" id="reporters" class="chx" value="02" v-model="r2">
                         <label for="reporters">02</label>
-                        <input type="checkbox" id="reporters" class="chx" value="03">
+                        <input type="checkbox" id="reporters" class="chx" value="03" v-model="r3">
                         <label for="reporters">03</label>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                 <div class="finalBtn">
                     <button type="reset" class="btnReset"><img src="/src/assets/icons8-rendez-vous-périodique-24.png" alt=""></button>
                     <button type="submit" class="btnSubmit">Valider</button>
-                   <button @click="printPdf" id="downloadPdf"><img src="/src/assets/icons8-pdf-2-36.png" alt=""></button>
+                    <button @click="printPdf" id="downloadPdf"><img src="/src/assets/icons8-pdf-2-36.png" alt=""></button>
                 </div>
 
             </div>
@@ -86,6 +86,55 @@
 
 <script setup>
     import { useRouter } from 'vue-router'
+    import { ref } from 'vue'
+
+    const matr = ref('')
+    const idorg = ref('')
+    const room = ref('')
+    const years = ref('')
+    const score = ref('')
+    const a1 = ref('')
+    const a2 = ref('')
+    const a3 = ref('')
+    const r1 = ref('')
+    const r2 = ref('')
+    const r3 = ref('')
+
+    const submitSession = async()=>{
+        try{
+            const response = await fetch('http://localhost:8000/session.php',{
+                method: 'POST',
+                headers:{
+                    'Content-Type' : 'application/json'
+                },
+                body:JSON.stringify({
+                    matr: matr.value,
+                    idorg: idorg.value,
+                    room: room.value,
+                    years: years.value,
+                    score: score.value,
+                    a1: a1.value,
+                    a2: a2.value,
+                    a3: a3.value,   
+                    r1: r1.value,
+                    r2: r2.value,
+                    r3: r3.value,
+                })
+            })
+
+            const result = await response.json();
+
+            if(result.status == 'success'){
+                matr.value = '',
+                idorg.value = '',
+                room.value = '',
+                score.value = ''
+            }
+
+        }catch(error){
+            console.error("La session n'a pas marche correctement")
+        }
+    }
 
     const router = useRouter()
 
