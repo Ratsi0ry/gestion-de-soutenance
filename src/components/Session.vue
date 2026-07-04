@@ -80,6 +80,8 @@
     import { useRouter } from 'vue-router'
     import { ref } from 'vue'
 
+    const router = useRouter()
+
     const matr = ref('')
     const idorg = ref('')
     const room = ref('')
@@ -93,46 +95,23 @@
     const r3 = ref('')
 
     const submitSession = async()=>{
-        try{
-            const response = await fetch('http://localhost:8000/session.php',{
-                method: 'POST',
-                headers:{
-                    'Content-Type' : 'application/json'
-                },
-                body:JSON.stringify({
-                    matr: matr.value,
-                    idorg: idorg.value,
-                    room: room.value,
-                    years: years.value,
-                    score: score.value,
-                    a1: a1.value,
-                    a2: a2.value,
-                    a3: a3.value,   
-                    r1: r1.value,
-                    r2: r2.value,
-                    r3: r3.value,
-                })
+        await fetch('http://localhost:8000/session.php',{
+            method: 'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({
+                matr: matr.value,
+                idorg: idorg.value,
+                room: room.value,
+                years: years.value,
+                score: score.value,
             })
-
-            const result = await response.json();
-
-            if(result.status == 'success'){
-                matr.value = ''
-                idorg.value = ''
-                room.value = ''
-                score.value = ''
-            }
-
-        }catch(error){
-            console.error("La session n'a pas marche correctement")
-        }
+        })
     }
-
-    const router = useRouter()
 
     const printPdf = ()=> {
         router.push({
-            path: '/pagePdf'
+            path: '/pagePdf',
+            query: { matr: matr.value }
         })
     }
 </script>

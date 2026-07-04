@@ -9,6 +9,7 @@
         <div class="pt2">
             <label for="sortSdt">Niveau :</label>
             <select name="sortSdt" id="sort" v-model="selectedLevel" @change="fetchSelectedValue">
+                <option value="">Tous les niveaux</option>
                 <option value="L1">L1</option>
                 <option value="L2">L2</option>
                 <option value="L3">L3</option>
@@ -20,6 +21,7 @@
         <div class="pt3">
             <label for="class">Parcours :</label>
             <select name="class" id="course" v-model="selectedClass" @change="fetchSelectedValue">
+                <option value="">Tous les parcours</option>
                 <option value="GB">GB</option>
                 <option value="SR">SR</option>
                 <option value="IG">IG</option>
@@ -29,14 +31,15 @@
         <div class=" pt4">
             <label for="success">trier par:</label>
             <select name="success" id="success" v-model="selectedStat" @change="fetchSelectedValue">
-                <option value="opt1">soutenance reussi</option>
-                <option value="opt2">soutenance en attente</option>
+                <option value="">Tous les statuts</option>
+                <option value="reussi">soutenance reussi</option>
+                <option value="en attente">soutenance en attente</option>
             </select>
         </div>
 
         <div class="pt5">
            <h4 v-if="selectedClass || selectedLevel || selectedStat">{{ totalStudents }}</h4>
-           <h4 v-else{{ totalStudents }}></h4>
+           <h4 v-else>{{ totalStudents }}</h4>
         </div>
     </div>
 
@@ -55,46 +58,43 @@
             
            
         </tr>
-        <tr v-for="student in students" :key="student.matr">
+        <tr v-for="(student, index) in students" :key="index">
             <td>
-                <span v-if="!edit[student.matr]">{{ student.matr }}</span>
-                <input type="text" v-else v-model="student.matr">
+                <span v-if="!edit[index]">{{ student.matr }}</span>
+                <input type="text" v-else v-model="student.matr" disabled>
             </td>
             <td>
-                <span v-if="!edit[student.name]">{{student.name }}</span>
+                <span v-if="!edit[index]">{{student.name }}</span>
                 <input type="text" v-else v-model="student.name">
             </td>
             <td>
-                <span v-if="!edit[student.fstName]">{{ student.fstName }}</span>
+                <span v-if="!edit[index]">{{ student.fstName }}</span>
                 <input type="text" v-else v-model="student.fstName">
             </td>
             <td>
-                <span v-if="!edit[student.level]">{{ student.level }}</span>
+                <span v-if="!edit[index]">{{ student.level }}</span>
                 <input type="text" v-else v-model="student.level">
             </td>
             <td>
-                <span v-if="!edit[student.class]">{{ student.class }}</span>
+                <span v-if="!edit[index]">{{ student.class }}</span>
                 <input type="text" v-else v-model="student.class">
             </td>
             <td>
-                <span v-if="!edit[student.email]">{{ student.email }}</span>
+                <span v-if="!edit[index]">{{ student.email }}</span>
                 <input type="text" v-else v-model="student.email">
             </td>
             <td>
-                <span v-if="!edit[student.years]">{{ student.years }}</span>
-                <input type="text" v-else v-model="student.years">
+                <span>{{ student.years }}</span>
             </td>
             <td>
-                <span v-if="edit[student.score]">{{ student.score }}</span>
-                <input type="text" v-else v-model="student.score">
+                <span>{{ student.score }}</span>
             </td>
             <td>
-                <span v-if="status[student.status]">{{ student.status }}</span>
-                <input type="text" v-else v-model="student.status">
+                <span>{{ student.design }}</span>
             </td>
             <td class="btnEvent">
-                <button @click="update(client)" class="update"><img src="@/assets/icons8-modifier-24.png">{{ edit[student.id] ? 'sauvegarder' : ''}}</button>
-                <button @click="remove(client.matr)" class="delete"><img src="@/assets/icons8-supprimer-24.png"></button>
+                <button @click="update(student, index)" class="update"><img src="@/assets/icons8-modifier-24.png">{{ edit[index] ? 'sauvegarder' : 'modifier'}}</button>
+                <button @click="remove(student.matr)" class="delete"><img src="@/assets/icons8-supprimer-24.png"></button>
             </td> 
         </tr>
     </table>
@@ -115,23 +115,30 @@ const selectedStat = ref('')
 const totalStudents = ref(0)
 
 const fetchSelectedValue = async() => {
+    const hasFilters = selectedLevel.value || selectedClass.value || selectedStat.value;
+
+    if (!hasFilters && !search.value.trim()) {
+        await fetchStudents();
+        return;
+    }
+
     try{
         const response = await fetch(`http://localhost:8000/filter.php?level=${selectedLevel.value}&class=${selectedClass.value}&stat=${selectedStat.value}`)
         const result = await response.json()
 
         if(result.status == 'success'){
             students.value = result.data
-            totalStudents.value = result.totalCount
+            totalStudents.value = result.totalCount || result.data.length
         } else{
             console.error("Erreur", result.message)
         }
     }catch(error){
-        console.error("Impossible de filtrer par niveau")
+        console.error("Impossible de filtrer par niveau", error)
     }
 }
 
 onMounted(()=>{
-    fetchSelectedValue()
+    fetchStudents()
 })
 
 const fetchStudents = async(query = '') => {
@@ -145,7 +152,7 @@ const fetchStudents = async(query = '') => {
 
         if(result.status == 'success'){
             students.value = result.data
-            
+            totalStudents.value = result.data.length
         } else {
             console.error("Erreur", result.message);
         }
@@ -158,13 +165,9 @@ watch(search, (newValue) => {
     fetchStudents(newValue.trim());
 });
 
-onMounted(() => {
-    fetchStudents()
-})
-
-const update = async(student)=>{
-    if(!edit.value[student.matr]){
-        edit.value[student.matr] = true
+const update = async(student, index)=>{
+    if(!edit.value[index]){
+        edit.value[index] = true
     }else{
         try{
             const response = await fetch('http://localhost:8000/student.php?action=update',{
@@ -181,6 +184,7 @@ const update = async(student)=>{
                     email: student.email,
                     years: student.years,
                     score: student.score,
+                    design: student.design,
                     status: student.status
                 })
             })
@@ -189,7 +193,7 @@ const update = async(student)=>{
             msg.value = result.message
 
             if(result.status == 'success'){
-                edit.value[student.matr] = false
+                edit.value[index] = false
             }else{
                 alert("erreur" + result.message)
             }

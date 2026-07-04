@@ -19,11 +19,11 @@
 
             <p><u>Membres du Jury</u></p>
 
-            <p><b>Président :</b>{{ info.chief }}</p>   
+            <p><b>Président :</b>Mr RATIARISON Venot, Maître de Conférences</p>   
 
-            <p><b>Examinateur :</b>{{ info.examiner }}</p>
+            <p><b>Examinateur :</b>Mr RALAIVAO Jean Christian, Assistant d\'Enseignement Supérieur de Recherche</p>
 
-            <p><b>Rapporteurs :</b>{{ info.reviewer }}</p>
+            <p><b>Rapporteurs :</b>Mme RATIANANTITRA Volatiana Marielle, Maître de Conférences</p>
 
             <div class="btn">
                 <button @click="downloadPdf" id="download" class="no-print"><img src="@/assets/icons8-télécharger-48.png" alt=""></button>
@@ -35,23 +35,17 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import html2pdf from 'html2pdf.js'
 
+const route = useRoute()
 const info = ref(null)
 
 const fetchSession = async()=>{
-    try{
-        const response = await fetch('http://localhost:8000/pagePdf.php')
-        const result = await response.json()
-
-        if(result.status == 'success'){
-            info.value = result.data
-        }else{
-            console.error('Erreur :', result.message)
-        }
-    }catch(error){
-        console.error("Impossible de charger les donnee", error)
-    }
+    const matricule = route.query.matr?.toString() || ''
+    const response = await fetch(`http://localhost:8000/pagePdf.php?matr=${encodeURIComponent(matricule)}`)
+    const result = await response.json()
+    if (result.status === 'success') info.value = result.data
 }
 
 onMounted(()=>{
