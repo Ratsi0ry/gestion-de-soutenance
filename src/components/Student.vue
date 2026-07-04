@@ -93,8 +93,8 @@
                 <input type="text" v-else v-model="student.status">
             </td>
             <td class="btnEvent">
-                <button @click="update(client)" class="update"><img src="/src/assets/icons8-modifier-24.png">{{ edit[student.id] ? 'sauvegarder' : ''}}</button>
-                <button @click="remove(client.matr)" class="delete"><img src="/src/assets/icons8-supprimer-24.png"></button>
+                <button @click="update(client)" class="update"><img src="@/assets/icons8-modifier-24.png">{{ edit[student.id] ? 'sauvegarder' : ''}}</button>
+                <button @click="remove(client.matr)" class="delete"><img src="@/assets/icons8-supprimer-24.png"></button>
             </td> 
         </tr>
     </table>

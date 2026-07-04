@@ -61,8 +61,8 @@
                 <td>Venot</td>
                 <td>Maître de Conférences</td>
                 <td class="btnEvent">
-                    <button class="update"><img src="/src/assets/icons8-modifier-24.png"></button>
-                    <button class="delete"><img src="/src/assets/icons8-supprimer-24.png"></button>
+                    <button class="update"><img src="@/assets/icons8-modifier-24.png"></button>
+                    <button class="delete"><img src="@/assets/icons8-supprimer-24.png"></button>
                 </td>
             </tr>   
              

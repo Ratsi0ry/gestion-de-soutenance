@@ -4,7 +4,7 @@
 
         <div class="sessionContent">
             <div class="container">
-                <p  class="logo"><img src="/src/assets/icons8-salle-de-réunion-38.png" alt=""></p>
+                <p  class="logo"><img src="@/assets/icons8-salle-de-réunion-38.png" alt=""></p>
                 <label for="matr">Matricule</label><br>
                 <input type="text" id="matr" v-model="matr"><br><br>
 
@@ -31,14 +31,6 @@
                         <input type="number" id="score" placeholder="note/20" v-model="score">
                     </div>
                 </div><br>
-
-    
-                <!---<label for="chief">id President :</label>
-                <select name="chief" id="chief">
-                    <option value="c1">01</option>
-                    <option value="c2">02</option>
-                    <option value="c3">03</option>
-                </select><br><br>-->
 
                 <div class="chxFlex">
                     <div>
@@ -71,9 +63,9 @@
                
 
                 <div class="finalBtn">
-                    <button type="reset" class="btnReset"><img src="/src/assets/icons8-rendez-vous-périodique-24.png" alt=""></button>
+                    <button type="reset" class="btnReset"><img src="@/assets/icons8-rendez-vous-périodique-24.png" alt=""></button>
                     <button type="submit" class="btnSubmit">Valider</button>
-                    <button @click="printPdf" id="downloadPdf"><img src="/src/assets/icons8-pdf-2-36.png" alt=""></button>
+                    <button @click="printPdf" id="downloadPdf"><img src="@/assets/icons8-pdf-2-36.png" alt=""></button>
                 </div>
 
             </div>
@@ -125,9 +117,9 @@
             const result = await response.json();
 
             if(result.status == 'success'){
-                matr.value = '',
-                idorg.value = '',
-                room.value = '',
+                matr.value = ''
+                idorg.value = ''
+                room.value = ''
                 score.value = ''
             }
 

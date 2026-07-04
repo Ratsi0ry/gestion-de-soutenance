@@ -1,10 +1,10 @@
 <template>  
     <div class="choice">
         <section>
-            <router-link to="/newSdt"><img src="/src/assets/icons8-levez-la-main-pour-répondre-48.png" alt=""><br>Elève</router-link>
+            <router-link to="/newSdt"><img src="@/assets/icons8-levez-la-main-pour-répondre-48.png" alt=""><br>Elève</router-link>
         </section>
         <section>
-            <router-link to="/newProf"><img src="/src/assets/icons8-prof-48.png" alt="">Professeur</router-link>
+            <router-link to="/newProf"><img src="@/assets/icons8-prof-48.png" alt="">Professeur</router-link>
         </section>
     </div>
 </template>

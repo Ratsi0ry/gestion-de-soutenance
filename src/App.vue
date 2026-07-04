@@ -5,10 +5,10 @@
     <nav>
       <section class="navWelcome"><img src="./assets/icons8-chapeau-de-diplôme-64.png"></section>
       <ul>
-        <li><img src="./assets/icons8-ajouter-24.png"><router-link to="/new"><b>Nouveau</b></router-link></li>
-        <li><img src="./assets/icons8-conférencier-24.png"><router-link to="/prof"><b>Professeurs</b></router-link></li>
-        <li><img src="./assets/icons8-liste-24.png"><router-link to="/sdt"><b>Etudiants</b></router-link></li>
-        <li><img src="./assets/icons8-diplôme-2-24.png"><router-link to="/session"><b>Session</b></router-link></li>
+        <li><img src="@/assets/icons8-ajouter-24.png"><router-link to="/new"><b>Nouveau</b></router-link></li>
+        <li><img src="@/assets/icons8-conférencier-24.png"><router-link to="/prof"><b>Professeurs</b></router-link></li>
+        <li><img src="@/assets/icons8-liste-24.png"><router-link to="/sdt"><b>Etudiants</b></router-link></li>
+        <li><img src="@/assets/icons8-diplôme-2-24.png"><router-link to="/session"><b>Session</b></router-link></li>
       </ul>
     </nav>
   </aside>
@@ -16,10 +16,10 @@
   <main class="content">
     <header>
       <h1>
-        <router-view><img src="./assets/icons8-onglet-28.png">{{ title }}</router-view>
+        <router-view><img src="@/assets/icons8-onglet-28.png">{{ title }}</router-view>
       </h1>
       <router-link to="/" @mouseenter="hover=true" @mouseleave="hover=false" class="logOut">
-        <img src="./assets/icons8-déconnexion-24.png" class="logOut_btn">
+        <img src="@/assets/icons8-déconnexion-24.png" class="logOut_btn">
         <span v-show="hover">se déconnecter</span>
       </router-link>
     </header>
@@ -43,10 +43,12 @@
   watch(
     ()=> route.path,
     (newPath)=> {
-      if(newPath == '/sdt' || '/') title.value = 'Etudiants'
+      if(newPath == '/') title.value = 'Nouveau'
+      if(newPath == '/sdt') title.value = 'Etudiants'
       if(newPath == '/prof') title.value = 'Professeurs'
       if(newPath == '/session') title.value = 'Session'
       if(newPath == '/new') title.value = 'Nouveau'
+      if(newPath == '/prof') title.value = "Professeurs"
     },
     {immediate:true}
     )

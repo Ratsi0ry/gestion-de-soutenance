@@ -28,8 +28,21 @@
             </div>
         </div><br>
 
-            <label for="number">Matricule :</label>
-            <input type="int" id="number" required><br><br>
+            <div class="item3">
+                <div>
+                    <label for="gender">Civilité:</label>
+                    <select name="gender" id="gender">
+                        <option value="Mr">Mr</option>
+                        <option value="Mlle">Mlle</option>
+                        <option value="Mme">Mme</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="number">Matricule :</label>
+                    <input type="int" id="number" required>
+                </div>
+            </div><br>
 
             <label for="name">Nom :</label><br>
             <input type="text" id="name" required><br><br>
@@ -41,7 +54,7 @@
             <input type="email" id="email" required><br><br><br>
 
             <div class="ok">
-                <button type="reset" class="btnReset"><img src="/src/assets/icons8-rendez-vous-périodique-24-black.png" alt=""></button>
+                <button type="reset" class="btnReset"><img src="@/assets/icons8-rendez-vous-périodique-24-black.png" alt=""></button>
                 <button type="submit" class="btnSubmit">Valider</button>
             </div>
         </div>
@@ -87,6 +100,11 @@
         /*font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;*/
         background-color: #f1f5f9;
         border: 1px solid #a7a8aa;
+    }
+
+    .item3{
+        gap:0.5rem;
+        display: flex; 
     }
 
     .ok{
