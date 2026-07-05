@@ -46,7 +46,7 @@
     <div class="item3">
         <table>
         <tr>
-            <th>Matricule</th>
+            <th class="start">Matricule</th>
             <th>Nom</th>
             <th>prenom</th>
             <th>Niveau</th>
@@ -54,43 +54,45 @@
             <th>Email</th>
             <th>anne_univ</th>
             <th>note</th>
-            <th>design</th>
-            
-           
+            <th class="end">design</th>     
         </tr>
-        <tr v-for="(student, index) in students" :key="index">
+
+        <tr v-for="(student, index) in students" :key="student.matr">
             <td>
                 <span v-if="!edit[index]">{{ student.matr }}</span>
-                <input type="text" v-else v-model="student.matr" disabled>
+                <input type="text" v-else v-model="student.matr" class="put">
             </td>
             <td>
-                <span v-if="!edit[index]">{{student.name }}</span>
-                <input type="text" v-else v-model="student.name">
+                <span v-if="!edit[index]">{{ student.name }}</span>
+                <input type="text" v-else v-model="student.name" class="put">
             </td>
             <td>
                 <span v-if="!edit[index]">{{ student.fstName }}</span>
-                <input type="text" v-else v-model="student.fstName">
+                <input type="text" v-else v-model="student.fstName" class="put">
             </td>
             <td>
                 <span v-if="!edit[index]">{{ student.level }}</span>
-                <input type="text" v-else v-model="student.level">
+                <input type="text" v-else v-model="student.level" class="put">
             </td>
             <td>
                 <span v-if="!edit[index]">{{ student.class }}</span>
-                <input type="text" v-else v-model="student.class">
+                <input type="text" v-else v-model="student.class" class="put">
             </td>
             <td>
                 <span v-if="!edit[index]">{{ student.email }}</span>
-                <input type="text" v-else v-model="student.email">
+                <input type="text" v-else v-model="student.email" class="put">
             </td>
             <td>
-                <span>{{ student.years }}</span>
+                <span v-if="!edit[index]">{{ student.years }}</span>
+                <input type="text" v-else v-model="student.years" class="put">
             </td>
             <td>
-                <span>{{ student.score }}</span>
+                <span v-if="!edit[index]">{{ student.score }}</span>
+                <input type="text" v-else v-model="student.score" class="put">
             </td>
             <td>
-                <span>{{ student.design }}</span>
+                <span v-if="!edit[index]">{{ student.design }}</span>
+                <input type="text" v-else v-model="student.design" class="put">
             </td>
             <td class="btnEvent">
                 <button @click="update(student, index)" class="update"><img src="@/assets/icons8-modifier-24.png">{{ edit[index] ? 'sauvegarder' : 'modifier'}}</button>
@@ -127,8 +129,13 @@ const fetchSelectedValue = async() => {
         const result = await response.json()
 
         if(result.status == 'success'){
-            students.value = result.data
-            totalStudents.value = result.totalCount || result.data.length
+            students.value = result.data.map(student => ({
+                ...student,
+                years: student.years ?? '',
+                score: student.score ?? '',
+                design: student.design ?? ''
+            }))
+            totalStudents.value = result.totalCount || students.value.length
         } else{
             console.error("Erreur", result.message)
         }
@@ -151,8 +158,13 @@ const fetchStudents = async(query = '') => {
         const result = await response.json()
 
         if(result.status == 'success'){
-            students.value = result.data
-            totalStudents.value = result.data.length
+            students.value = result.data.map(student => ({
+                ...student,
+                years: student.years ?? '',
+                score: student.score ?? '',
+                design: student.design ?? ''
+            }))
+            totalStudents.value = students.value.length
         } else {
             console.error("Erreur", result.message);
         }
@@ -253,7 +265,7 @@ const remove = async(matr)=>{
         font-size: 14px;
     }
 
-    td,th {
+    td {
         border: 1px solid black;
         text-align: center;
         padding-left:1.2rem;
@@ -298,4 +310,38 @@ const remove = async(matr)=>{
         margin-top: 1rem;
         background-color:#f4f6f9;
     }
+
+    input.put{
+        width: 4rem;
+        border: 0;
+        background-color: #f4f6f9;
+        padding: 0.5rem;
+    }
+
+    th{
+        padding: 0.5rem;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: rgba(0, 0, 0, 0.87);
+        color: white;
+    }
+
+    input.put:hover{
+        background-color: #00e676;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    th.start{
+        background-color: rgba(0, 0, 0, 0.87);
+        border-top-left-radius: 7px;
+        color: white;
+    }
+
+    .end{
+        background-color: rgba(0, 0, 0, 0.87);
+        border-top-right-radius: 7px;
+        color: white;
+    }
+
+
 </style>
