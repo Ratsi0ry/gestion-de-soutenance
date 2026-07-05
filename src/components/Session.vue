@@ -11,6 +11,9 @@
                 <label for="org">idorg</label><br>
                 <input type="number" id="org" v-model="idorg"><br><br>
 
+                 <label for="design">Design</label><br>
+                <input type="text" id="design" v-model="design"><br><br>
+
                 <label for="room">Lieu</label><br>
                 <input type="text" id="room" v-model="room"><br><br>
 
@@ -87,6 +90,7 @@
     const room = ref('')
     const years = ref('')
     const score = ref('')
+    const design = ref('')
     const a1 = ref('')
     const a2 = ref('')
     const a3 = ref('')
@@ -104,6 +108,7 @@
                 room: room.value,
                 years: years.value,
                 score: score.value,
+                design: design.value
             })
         })
     }

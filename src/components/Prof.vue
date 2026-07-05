@@ -16,24 +16,29 @@
         <form>
             <!--nom-->
             <label for="nameProf" style="margin-left:1rem;">Nom :</label>
-            <input type="text" id="nameProf" class="put"><br><br>
+            <input type="text" id="nameProf"><br><br>
 
             <!--prenom-->
             <label for="fstNameProf">Prénom :</label>
-               <input type="text" id="fstNameProf" class="put"><br><br>
+               <input type="text" id="fstNameProf"><br><br>
 
             <!--civilité-->
             <label for="gender" style="margin-left: 0.5rem;">Civilité :</label>
-            <input type="text" id="genderProf" class="put">
+            <select name="gender" id="gender">
+                <option value="Mr">Mr</option>
+                <option value="Mlle">Mlle</option>
+                <option value="Mme">Mme</option>
+            </select><br><br>
+
             <!--grade-->
             <label for="status">Grade : </label>
             <select name="status" id="status">
-                <option value="val1">Assistant d'Enseignement Supérieur et de recherche</option>
-                <option value="val2">Proffeseur titulaire</option>
-                <option value="val3">Maître de Conférences</option>
-                <option value="val4">Docteur HDR</option>
-                <option value="val5">Docteur en Informatique</option>
-                <option value="val6">Doctorant en Informatique</option>
+                <option value="Assistant d'Enseignement Supérieur et de recherche">Assistant d'Enseignement Supérieur et de recherche</option>
+                <option value="Proffeseur titulaire">Proffeseur titulaire</option>
+                <option value="Maître de Conférences">Maître de Conférences</option>
+                <option value="Docteur HDR">Docteur HDR</option>
+                <option value="Docteur en Informatique">Docteur en Informatique</option>
+                <option value="Doctorant en Informatique">Doctorant en Informatique</option>
             </select><br><br>
      
             <button type="submit" id="submit">Valider</button> 
@@ -49,15 +54,30 @@
                <th>prenom</th>
                <th>grade</th>
             </tr>
-            <tr>
-                <td>01</td>
-                <td>Mr</td>
-                <td>RATIARISON</td>
-                <td>Venot</td>
-                <td>Maître de Conférences</td>
+            <tr v-for="prof in profs" :key="prof.idprof">
+                <td>
+                    <span v-if="!edit[prof.idprof]">{{ prof.idprof }}</span>
+                    <input type="text" v-else v-model="prof.idprof">
+                </td>
+                <td>
+                    <span v-if="!edit[prof.civilite]">{{ prof.civilite }}</span>
+                    <input type="text" v-else v-model="prof.civilite">
+                </td>
+                <td>
+                    <span v-if="!edit[prof.nom]">{{ prof.nom }}</span>
+                    <input type="text" v-else v-model="prof.nom">
+                </td>
+                <td>
+                    <span v-if="!edit[prof.prenom]">{{ prof.prenom }}</span>
+                    <input type="text" v-else v-model="prof.prenom">
+                </td>
+                <td>
+                    <span v-if="!edit[prof.grade]">{{ prof.grade }}</span>
+                    <input type="text" v-else v-model="prof.grade">
+                </td>
                 <td class="btnEvent">
-                    <button class="update"><img src="@/assets/icons8-modifier-24.png"></button>
-                    <button class="delete"><img src="@/assets/icons8-supprimer-24.png"></button>
+                    <button @click="update(prof)" class="update"><img src="@/assets/icons8-modifier-24.png"></button>
+                    <button @click="remove(prof.idprof)" class="delete"><img src="@/assets/icons8-supprimer-24.png"></button>
                 </td>
             </tr>   
              
@@ -66,9 +86,67 @@
 </template>
 
 <script setup>
-import {ref} from 'vue'
+    import { onMounted, ref } from 'vue';
+    const profs = ref([]);
+    const show = ref(false);
+    const edit = ref({});
 
-const show =ref(false)
+    const get_professors = async () => {
+        try {
+            const response = await fetch(`http://localhost:8000/profs.php`, {
+                method: 'GET'
+            });
+            const prof_list = await response.json();
+            profs.value = prof_list;
+            
+        } catch (error) {
+            console.error("error");
+        }
+    }
+    onMounted(() => {
+        get_professors();
+    });
+
+    const remove = async (idprof) => {
+        try {
+            const response = await fetch(`http://localhost:8000/profs.php?idprof=${idprof}`, {
+                method: 'DELETE'
+            });
+            const result = await response.json();
+            if (result.status === 'success') {
+                alert('Professeur supprimé avec succès!');
+                get_professors();
+            } else {
+                alert("Erreur lors de la suppression du professeur.");
+            }
+        } catch (error) {
+            alert("Erreur lors de la suppression du professeur!");
+        }
+    }
+
+    const update = async (prof) => {
+        try {
+            const response = await fetch(`http://localhost:8000/profs.php`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(prof)
+            });
+            const result = await response.json();
+            if (result.status === 'success') {
+                alert('Professeur mis à jour avec succès!');
+                get_professors();
+            } else {
+                alert("Erreur lors de la mise à jour du professeur.");
+            }
+        } catch (error) {
+            alert("Erreur lors de la mise à jour du professeur!");
+        }
+    }
+
+
+
 </script>
 <style scoped>
     .section1{
@@ -128,24 +206,5 @@ const show =ref(false)
         border: 0;
         margin-top: 1rem;
         background-color:#f4f6f9;
-    }
-
-    th{
-        padding: 0.5rem;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: rgba(0, 0, 0, 0.87);
-        color: white;
-        border: 1px solid black;
-    }
-
-    input.put:hover{
-        background-color: #00e676;
-        border-radius: 5px;
-        font-weight: bold;
-    }
-
-    input:active{
-        background-color: #00e676;
-        border: 0;
     }
 </style>

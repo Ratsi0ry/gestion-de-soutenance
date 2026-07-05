@@ -2,14 +2,14 @@
 
     <!--<h3>Etudiant</h3>-->
 
-    <form>
+    <form @submit.prevent="fetch_create_student">
 
         <div class="item2">
 
             <div class="item1">
             <div>
                 <label for="level">Niveau :</label>
-                    <select name="level" id="level">
+                    <select name="level" id="level" v-model="niveau">
                     <option value="L1">L1</option>
                     <option value="L2">L2</option>
                     <option value="L3">L3</option>
@@ -20,7 +20,7 @@
 
             <div>
                 <label for="class">Parcours :</label>
-                    <select name="class" id="class">
+                    <select name="class" id="class" v-model="parcours">
                     <option value="GB">GB</option>
                     <option value="IG">IG</option>
                     <option value="SR">SR</option>
@@ -31,7 +31,7 @@
             <div class="item3">
                 <div>
                     <label for="gender">Civilité:</label>
-                    <select name="gender" id="gender">
+                    <select name="gender" id="gender" v-model="civilite">
                         <option value="Mr">Mr</option>
                         <option value="Mlle">Mlle</option>
                         <option value="Mme">Mme</option>
@@ -40,18 +40,18 @@
 
                 <div>
                     <label for="number">Matricule :</label>
-                    <input type="int" id="number" required>
+                    <input type="int" id="number" required v-model="matricule">
                 </div>
             </div><br>
 
             <label for="name">Nom :</label><br>
-            <input type="text" id="name" required><br><br>
+            <input type="text" id="name" required v-model="nom"><br><br>
 
             <label for="fstName">Prénom :</label><br>
-            <input type="text" id="fstName" required><br><br>
+            <input type="text" id="fstName" required v-model="prenom"><br><br>
 
             <label for="email">Email :</label><br>
-            <input type="email" id="email" required><br><br><br>
+            <input type="email" id="email" required v-model="adr_email"><br><br><br>
 
             <div class="ok">
                 <button type="reset" class="btnReset"><img src="@/assets/icons8-rendez-vous-périodique-24-black.png" alt=""></button>
@@ -61,6 +61,75 @@
 
     </form>
 </template>
+
+<script>
+    import { ref } from 'vue';
+    const matricule = ref('');
+    const nom = ref('');
+    const prenom = ref('');
+    const niveau = ref('');
+    const parcours = ref('');
+    const adr_email = ref('');
+    const civilite = ref('');
+
+    const fetch_create_student = async() => {
+        try {
+            const reponse = await fetch('http://localhost:8000/createStudents.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body : JSON.stringify({
+                    matricule:matricule.value,
+                    nom:nom.value,
+                    prenom:prenom.value,
+                    niveau:niveau.value,
+                    parcours:parcours.value,
+                    adr_email:adr_email.value,
+                    civilite:civilite.value
+                })
+            });
+            
+            const request = await reponse.json();
+            
+            if (request.status === 'success') {
+                alert('Etudiant ajouté avec succès!');
+                matricule.value = '';
+                nom.value = '';
+                prenom.value = '';
+                niveau.value = '';
+                parcours.value = '';
+                adr_email.value = '';
+                civilite.value = '';
+            }
+            else if (request.status === 'error') {
+                alert("Erreur lors de l'ajout de l'etudiant " + request.message);
+            } 
+            else if (request.status === 'exist'){
+                alert("Le matricule existe déjà!");
+            }
+
+        } catch (error) {
+            console.error('Erreur lors de la requête');
+        }
+    }
+
+    export default {
+        setup() {
+            return {
+                matricule,
+                nom,
+                prenom,
+                niveau,
+                parcours,
+                adr_email,
+                civilite,
+                fetch_create_student
+            };
+        }
+    };
+    
+</script>
 
 <style scoped>
     .item1{

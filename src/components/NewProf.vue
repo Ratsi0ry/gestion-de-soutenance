@@ -2,19 +2,19 @@
 
     <!--<h3>Etudiant</h3>-->
 
-    <form>
+    <form @submit.prevent="fetch_create_prof">
 
         <div class="item2">
 
             <div class="item1">
             <div>
                 <label for="idProf">id prof :</label>
-                <input type="text" id="idProf" required>
+                <input type="text" id="idProf" required v-model="idprof">
             </div>
 
             <div>
                 <label for="gender">Civilité:</label>
-                    <select name="gender" id="gender">
+                    <select name="gender" id="gender" v-model="civilite">
                     <option value="Mr">Mr</option>
                     <option value="Mlle">Mlle</option>
                     <option value="Mme">Mme</option>
@@ -23,14 +23,20 @@
             </div><br>
 
             <label for="name">Nom :</label><br>
-            <input type="text" id="name" required><br><br>
+            <input type="text" id="name" required v-model="nom"><br><br>
 
             <label for="fstName">Prénom :</label><br>
-            <input type="text" id="fstName" required class="put"><br><br>
+            <input type="text" id="fstName" required v-model="prenom"><br><br>
 
             <label for="status">Grade : </label><br>
-            <input type="text" id="grade" required class="put"><br><br>
-            
+            <select name="status" id="status" v-model="grade">
+                <option value="Assistant d'Enseignement Supérieur et de recherche">Assistant d'Enseignement Supérieur et de recherche</option>
+                <option value="Proffeseur titulaire">Proffeseur titulaire</option>
+                <option value="Maître de Conférences">Maître de Conférences</option>
+                <option value="Docteur HDR">Docteur HDR</option>
+                <option value="Docteur en Informatique">Docteur en Informatique</option>
+                <option value="Doctorant en Informatique">Doctorant en Informatique</option>
+            </select><br><br>
 
             <div class="ok">
                 <button type="reset" class="btnReset"><img src="@/assets/icons8-rendez-vous-périodique-24-black.png" alt=""></button>
@@ -40,6 +46,67 @@
 
     </form>
 </template>
+
+<script>
+
+    import { ref } from 'vue';
+    const idprof = ref('');
+    const nom = ref('');
+    const prenom = ref('');
+    const civilite = ref('');
+    const grade = ref('');
+
+    const fetch_create_prof = async() => {
+        try {
+            const reponse = await fetch('http://localhost:8000/addProf.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    idprof:idprof.value,
+                    nom:nom.value,
+                    prenom:prenom.value,
+                    civilite:civilite.value,
+                    grade:grade.value
+                })
+            });
+
+            const request = await reponse.json();
+
+            if (request.status === 'success') {
+                alert('Professeur ajouté avec succès !');
+                idprof.value = '';
+                nom.value = '';
+                prenom.value = '';
+                civilite.value = '';
+                grade.value = '';
+            } 
+            else if (request.status === 'error') {
+                alert("Erreur lors de l'ajout du professeur.");
+            } 
+            else if (request.status === 'exist') {
+                alert('Le professeur existe déjà.');
+            }
+        } catch (error) {
+            console.error('Erreur lors de la requête');
+        }
+    }
+
+    export default {
+        setup() {
+            return {
+                idprof,
+                nom,
+                prenom,
+                civilite,
+                grade,
+                fetch_create_prof
+            };
+        }
+    }
+
+</script>
 
 <style scoped>
     .item1{
