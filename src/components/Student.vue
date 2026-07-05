@@ -39,7 +39,7 @@
 
         <div class="pt5">
            <h4 v-if="selectedClass || selectedLevel || selectedStat">{{ totalStudents }}</h4>
-           <h4 v-else>{{ totalStudents }}</h4>
+           <p v-else class="total">{{ totalStudents }} elèves</p>
         </div>
     </div>
 
@@ -95,7 +95,7 @@
                 <input type="text" v-else v-model="student.design" class="put">
             </td>
             <td class="btnEvent">
-                <button @click="update(student, index)" class="update"><img src="@/assets/icons8-modifier-24.png">{{ edit[index] ? 'sauvegarder' : 'modifier'}}</button>
+                <button @click="update(student, index)" class="update"><img src="@/assets/icons8-modifier-24.png">{{ edit[index] ? 'sauvegarder' : ''}}</button>
                 <button @click="remove(student.matr)" class="delete"><img src="@/assets/icons8-supprimer-24.png"></button>
             </td> 
         </tr>
@@ -312,7 +312,7 @@ const remove = async(matr)=>{
     }
 
     input.put{
-        width: 4rem;
+        width: 2rem;
         border: 0;
         background-color: #f4f6f9;
         padding: 0.5rem;
@@ -323,6 +323,7 @@ const remove = async(matr)=>{
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         background-color: rgba(0, 0, 0, 0.87);
         color: white;
+        border: 1px solid black;
     }
 
     input.put:hover{
@@ -331,17 +332,13 @@ const remove = async(matr)=>{
         font-weight: bold;
     }
 
-    th.start{
-        background-color: rgba(0, 0, 0, 0.87);
-        border-top-left-radius: 7px;
-        color: white;
+    input:active{
+        background-color: #00e676;
+        border: 0;
     }
 
-    .end{
-        background-color: rgba(0, 0, 0, 0.87);
-        border-top-right-radius: 7px;
-        color: white;
+    p.total{
+        font-size: large;
+        padding: 1rem;
     }
-
-
 </style>

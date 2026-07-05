@@ -26,17 +26,11 @@
             <input type="text" id="name" required><br><br>
 
             <label for="fstName">Prénom :</label><br>
-            <input type="text" id="fstName" required><br><br>
+            <input type="text" id="fstName" required class="put"><br><br>
 
             <label for="status">Grade : </label><br>
-            <select name="status" id="status">
-                <option value="val1">Assistant d'Enseignement Supérieur et de recherche</option>
-                <option value="val2">Proffeseur titulaire</option>
-                <option value="val3">Maître de Conférences</option>
-                <option value="val4">Docteur HDR</option>
-                <option value="val5">Docteur en Informatique</option>
-                <option value="val6">Doctorant en Informatique</option>
-            </select><br><br>
+            <input type="text" id="grade" required class="put"><br><br>
+            
 
             <div class="ok">
                 <button type="reset" class="btnReset"><img src="@/assets/icons8-rendez-vous-périodique-24-black.png" alt=""></button>

@@ -16,20 +16,15 @@
         <form>
             <!--nom-->
             <label for="nameProf" style="margin-left:1rem;">Nom :</label>
-            <input type="text" id="nameProf"><br><br>
+            <input type="text" id="nameProf" class="put"><br><br>
 
             <!--prenom-->
             <label for="fstNameProf">Prénom :</label>
-               <input type="text" id="fstNameProf"><br><br>
+               <input type="text" id="fstNameProf" class="put"><br><br>
 
             <!--civilité-->
             <label for="gender" style="margin-left: 0.5rem;">Civilité :</label>
-            <select name="gender" id="gender">
-                <option value="opt1">Mr</option>
-                <option value="opt2">Mlle</option>
-                <option value="opt3">Mme</option>
-            </select><br><br>
-
+            <input type="text" id="genderProf" class="put">
             <!--grade-->
             <label for="status">Grade : </label>
             <select name="status" id="status">
@@ -133,5 +128,24 @@ const show =ref(false)
         border: 0;
         margin-top: 1rem;
         background-color:#f4f6f9;
+    }
+
+    th{
+        padding: 0.5rem;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: rgba(0, 0, 0, 0.87);
+        color: white;
+        border: 1px solid black;
+    }
+
+    input.put:hover{
+        background-color: #00e676;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    input:active{
+        background-color: #00e676;
+        border: 0;
     }
 </style>
