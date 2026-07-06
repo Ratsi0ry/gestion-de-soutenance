@@ -1,42 +1,49 @@
 <template>
     <div id="contain" v-if="info">
 
-        <h4 class="putCenter">PROCES VERBAL</h4>
-        <h4 class="putCenter">SOUTENANCE DE FIN D'ETUDES POUR L'OBTENTION DU DIPLOME DE LICENCE</h4>
-        <h4 class="putCenter">PROFESSIONNELE</h4>
+        <h3 class="putCenter">PROCÈS-VERBAL</h3>
+        <h4 class="putCenter">SOUTENANCE DE FIN D'ÉTUDES POUR L'OBTENTION DU {{ diplome}}</h4>
         <h4 class="putCenter"><b>Mention :</b> Informatique</h4>
-        <h4 class="putCenter"><b>Parcours :</b>{{ info.class }}</h4><br>
+        <h4 class="putCenter"><b>Parcours :</b> {{ info.class }}</h4><br><br>
 
-        
         <div class="text">
-            <h4>{{ info.gender }} {{ info.name }}  {{ info.fstName }} </h4>
+            <h4>{{ info.civilite }} {{ info.name }} {{ info.fstName }}</h4>
 
-            <p> a soutenu publiquement son mémoire de fin d'études pour l'obtention du diplôme de 
-            Licence professionnelle.</p>
+            <p>a soutenu publiquement son mémoire de fin d'études pour l'obtention du {{ diplome.toLowerCase() }}.</p>
 
-            <p>Après déliberation, la commission des membres du Jury a attribué la note de
-            {{ info.score }}/20</p><br>
+            <p>Après délibération, la commission des membres du Jury a attribué la note de : 
+            <strong>{{ info.score }}/20</strong></p><br>
 
-            <p><u>Membres du Jury</u></p>
-
-            <p><b>Président :</b>Mr RATIARISON Venot, Maître de Conférences</p>   
-
-            <p><b>Examinateur :</b>Mr RALAIVAO Jean Christian, Assistant d\'Enseignement Supérieur de Recherche</p>
-
-            <p><b>Rapporteurs :</b>Mme RATIANANTITRA Volatiana Marielle, Maître de Conférences</p>
+            <p><u>Membres du Jury :</u></p>
+            <p><b>Président :</b> {{ info.president }}</p>   
+            <p><b>Examinateur :</b> {{ info.examinateur }}</p>
+            <p><b>Rapporteurs :</b> {{ info.rapporteur_int }} <span v-if="info.rapporteur_ext">et {{ info.rapporteur_ext }}</span></p>
 
             <div class="btn">
                 <button @click="downloadPdf" id="download" class="no-print"><img src="@/assets/icons8-télécharger-48.png" alt=""></button>
             </div>
         </div>
-
-        </div>
+    </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import html2pdf from 'html2pdf.js'
+
+const diplome = computed(() => {
+    if (!info.value || !info.value.niveau) return 'DIPLÔME';
+    
+    const niv = info.value.niveau.toUpperCase();
+    
+    if (niv.includes('M')) { 
+        return 'DIPLÔME DE MASTER PROFESSIONNEL';
+    } 
+
+    else {
+        return "DIPLÔME DE LICENCE PROFESSIONNELLE";
+    }
+});
 
 const route = useRoute()
 const info = ref(null)
@@ -52,18 +59,6 @@ onMounted(()=>{
     fetchSession()
 })
 
-/*const info = ref({
-    mention : 'Informatique',
-    parcours: 'Informatique général',
-    civilite: 'Mr',
-    nom: 'Rakoto Gilbert',
-    note: '18/20',
-    president: 'Mr RATIARISON Venot, Maître de Conférences',
-    examinateur: 'Mr RALAIVAO Jean Christian, Assistant d\'Enseignement Supérieur de Recherche',
-    rappoteur1: 'Mme RATIANANTITRA Volatiana Marielle, Maître de Conférences',
-    rappoteur2: 'Mr HARIJAONA José'
-    
-})*/
 const downloadPdf = ()=> {
     const element = document.getElementById('contain');
     const opt = {

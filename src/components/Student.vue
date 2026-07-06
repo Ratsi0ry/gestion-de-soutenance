@@ -8,7 +8,7 @@
 
         <div class="pt2">
             <label for="sortSdt">Niveau :</label>
-            <select name="sortSdt" id="sort" v-model="selectedLevel" @change="fetchSelectedValue">
+            <select name="sortSdt" id="sort" v-model="selectedLevel">
                 <option value="">Tous les niveaux</option>
                 <option value="L1">L1</option>
                 <option value="L2">L2</option>
@@ -20,7 +20,7 @@
 
         <div class="pt3">
             <label for="class">Parcours :</label>
-            <select name="class" id="course" v-model="selectedClass" @change="fetchSelectedValue">
+            <select name="class" id="course" v-model="selectedClass">
                 <option value="">Tous les parcours</option>
                 <option value="GB">GB</option>
                 <option value="SR">SR</option>
@@ -30,7 +30,7 @@
 
         <div class=" pt4">
             <label for="success">trier par:</label>
-            <select name="success" id="success" v-model="selectedStat" @change="fetchSelectedValue">
+            <select name="success" id="success" v-model="selectedStat">
                 <option value="">Tous les statuts</option>
                 <option value="reussi">soutenance reussi</option>
                 <option value="en attente">soutenance en attente</option>
@@ -46,57 +46,44 @@
     <div class="item3">
         <table>
         <tr>
-            <th class="start">Matricule</th>
+            <th>Matricule</th>
             <th>Nom</th>
             <th>prenom</th>
             <th>Niveau</th>
             <th>parcours</th>
             <th>Email</th>
             <th>anne_univ</th>
-            <th>note</th>
-            <th class="end">design</th>     
+            <th>note</th>   
         </tr>
 
-        <tr v-for="(student, index) in students" :key="student.matr">
+        <tr v-for="student in filteredStudents" :key="student.matricule">
             <td>
-                <span v-if="!edit[index]">{{ student.matr }}</span>
-                <input type="text" v-else v-model="student.matr" class="put">
+                <span>{{ student.matricule }}</span>
             </td>
             <td>
-                <span v-if="!edit[index]">{{ student.name }}</span>
-                <input type="text" v-else v-model="student.name" class="put">
+                <span>{{ student.nom }}</span>
             </td>
             <td>
-                <span v-if="!edit[index]">{{ student.fstName }}</span>
-                <input type="text" v-else v-model="student.fstName" class="put">
+                <span>{{ student.prenom }}</span>
             </td>
             <td>
-                <span v-if="!edit[index]">{{ student.level }}</span>
-                <input type="text" v-else v-model="student.level" class="put">
+                <span>{{ student.niveau }}</span>
             </td>
             <td>
-                <span v-if="!edit[index]">{{ student.class }}</span>
-                <input type="text" v-else v-model="student.class" class="put">
+                <span>{{ student.parcours }}</span>
             </td>
             <td>
-                <span v-if="!edit[index]">{{ student.email }}</span>
-                <input type="text" v-else v-model="student.email" class="put">
+                <span>{{ student.adr_email }}</span>
             </td>
             <td>
-                <span v-if="!edit[index]">{{ student.years }}</span>
-                <input type="text" v-else v-model="student.years" class="put">
+                <span>{{ student.annee_univ ? student.annee_univ : ''}}</span>
             </td>
             <td>
-                <span v-if="!edit[index]">{{ student.score }}</span>
-                <input type="text" v-else v-model="student.score" class="put">
-            </td>
-            <td>
-                <span v-if="!edit[index]">{{ student.design }}</span>
-                <input type="text" v-else v-model="student.design" class="put">
+                <span v-if="student.note !==  null">{{ student.note }}</span>
             </td>
             <td class="btnEvent">
-                <button @click="update(student, index)" class="update"><img src="@/assets/icons8-modifier-24.png">{{ edit[index] ? 'sauvegarder' : ''}}</button>
-                <button @click="remove(student.matr)" class="delete"><img src="@/assets/icons8-supprimer-24.png"></button>
+                <button @click="update(student)" class="update"><img src="@/assets/icons8-modifier-24.png"></button>
+                <button @click="remove(student.matricule)" class="delete"><img src="@/assets/icons8-supprimer-24.png"></button>
             </td> 
         </tr>
     </table>
@@ -106,141 +93,103 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, computed } from 'vue';
+
 const students = ref([])
-const edit = ref({})
 const msg = ref('')
-const search= ref('')
+const search = ref('')
 const selectedLevel = ref('')
 const selectedClass = ref('')
 const selectedStat = ref('')
-const totalStudents = ref(0)
 
-const fetchSelectedValue = async() => {
-    const hasFilters = selectedLevel.value || selectedClass.value || selectedStat.value;
-
-    if (!hasFilters && !search.value.trim()) {
-        await fetchStudents();
-        return;
-    }
-
-    try{
-        const response = await fetch(`http://localhost:8000/filter.php?level=${selectedLevel.value}&class=${selectedClass.value}&stat=${selectedStat.value}`)
-        const result = await response.json()
-
-        if(result.status == 'success'){
-            students.value = result.data.map(student => ({
-                ...student,
-                years: student.years ?? '',
-                score: student.score ?? '',
-                design: student.design ?? ''
-            }))
-            totalStudents.value = result.totalCount || students.value.length
-        } else{
-            console.error("Erreur", result.message)
-        }
-    }catch(error){
-        console.error("Impossible de filtrer par niveau", error)
+const fetchStudents = async () => {
+    try {
+        const response = await fetch('http://localhost:8000/filter.php');
+        students.value = await response.json();
+    } catch (error) {
+        console.error("Erreur lors de la récupération des données :", error);
     }
 }
 
-onMounted(()=>{
-    fetchStudents()
+onMounted(() => {
+    fetchStudents();
 })
 
-const fetchStudents = async(query = '') => {
-    try{
-        const url = query 
-        ? `http://localhost:8000/search.php?q=${encodeURIComponent(query)}`
-        : 'http://localhost:8000/search.php';
+const filteredStudents = computed(() => {
+    return students.value.filter(student => {
 
-        const response  = await fetch(url)
-        const result = await response.json()
+        const matchesSearch = !search.value || 
+            (student.nom && student.nom.toLowerCase().includes(search.value.toLowerCase())) ||
+            (student.matricule && student.matricule.toLowerCase().includes(search.value.toLowerCase()));
 
-        if(result.status == 'success'){
-            students.value = result.data.map(student => ({
-                ...student,
-                years: student.years ?? '',
-                score: student.score ?? '',
-                design: student.design ?? ''
-            }))
-            totalStudents.value = students.value.length
-        } else {
-            console.error("Erreur", result.message);
+        const matchesLevel = !selectedLevel.value || student.niveau === selectedLevel.value;
+
+
+        const matchesClass = !selectedClass.value || student.parcours === selectedClass.value;
+
+
+        const intNote = student.note !== null ? parseFloat(student.note) : null; // <--- CORRIGÉ ICI (const ajouté)
+        let matchesStat = true;
+        if (selectedStat.value === 'reussi') {
+            matchesStat = intNote !== null && intNote >= 10;
+        } else if (selectedStat.value === 'en attente') {
+            matchesStat = intNote === null || intNote < 10;
         }
-    } catch(error){
-        console.error("Impossible de récupérer les données", error)
-    }
-}
 
-watch(search, (newValue) => {
-    fetchStudents(newValue.trim());
+        return matchesSearch && matchesLevel && matchesClass && matchesStat;
+    });
 });
 
-const update = async(student, index)=>{
-    if(!edit.value[index]){
-        edit.value[index] = true
-    }else{
-        try{
-            const response = await fetch('http://localhost:8000/student.php?action=update',{
-                method: 'POST',
-                headers: {
-                    'Content-Type' : 'application/json'
-                },
-                body: JSON.stringify({
-                    matr: student.matr,
-                    name: student.name,
-                    fstName: student.fstName,
-                    level: student.level,
-                    class: student.class,
-                    email: student.email,
-                    years: student.years,
-                    score: student.score,
-                    design: student.design,
-                    status: student.status
-                })
-            })
+const totalStudents = computed(() => filteredStudents.value.length);
 
-            const result = await response.json()
-            msg.value = result.message
+const update = async (student) => {
+  const nom = prompt("Modifier le nom :", student.nom || '');
+  const prenom = prompt("Modifier le prenom :", student.prenom || '');
+  const niveau = prompt("Modifier le niveau: ", student.niveau || '');
+  const parcours = prompt("Modifier le parcours: ", student.parcours || '');
+  const email = prompt("Modifier l'email :", student.adr_email || '');
+  const annee = prompt("Modifier l'année universitaire :", student.annee_univ || '');
+  const note = prompt("Modifier la note :", student.note !== null ? student.note : '');
 
-            if(result.status == 'success'){
-                edit.value[index] = false
-            }else{
-                alert("erreur" + result.message)
-            }
-
-        }catch(error){
-            console.error("Impossible de modifier les données", error)
-        }
-    }
+  if (nom !== null && prenom !== null && niveau !== null && parcours !== null && email !== null && annee !== null && note !== null) {
+    await fetch('http://localhost:8000/updateStudent.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        matricule: student.matricule,
+        nom,
+        prenom,
+        niveau,
+        parcours,
+        adr_email: email,
+        annee_univ: annee,
+        note: note === "" ? null : note
+      })
+    });
+    fetchStudents();
+  }
 }
 
-const remove = async(matr)=>{
-    if(confirm("Cette ligne va être supprimé")){
-        try{
-            const response = await fetch('http://localhost:8000/student.php?action=delete', {
-                method: 'POST',
-                headers: {
-                    'Content-Type' : 'application/json'
-                },
-                body: JSON.stringify({matr: matr})
-            })
-
-            const result = await response.json();
-            msg.value = result.message
-
-            if(result.status == 'success'){
-                const index = students.value.findIndex(c=> c.matr == matr) //finIndex: trouvé l'id corresponant dans le tableau
-                if(index >-1){
-                students.value.splice(index, 1)}
-            }
-
-        }catch(error){
-            console.error('Erreur de suppression')
-            msg.value = 'Impossible de supprimer la ligne'
-        }
+const remove = async (matricule) => {
+  if (confirm("Supprimer définitivement cet étudiant et ses notes ?")) {
+    try {
+      const response = await fetch('http://localhost:8000/removeStudent.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ matricule: matricule })
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        fetchStudents(); 
+      } else {
+        alert("Erreur retournée par le serveur PHP : " + result.error);
+      }
+    } catch (error) {
+      alert("Erreur de connexion avec deleteStudent.php : " + error);
     }
+  }
 }
 </script>
 <style scoped>

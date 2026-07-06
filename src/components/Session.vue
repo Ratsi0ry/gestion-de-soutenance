@@ -1,82 +1,58 @@
 <template>
-
     <form @submit.prevent="submitSession">
-
         <div class="sessionContent">
             <div class="container">
-                <p  class="logo"><img src="@/assets/icons8-salle-de-réunion-38.png" alt=""></p>
+                <p class="logo"><img src="@/assets/icons8-salle-de-réunion-38.png" alt=""></p>
+                
                 <label for="matr">Matricule</label><br>
                 <input type="text" id="matr" v-model="matr"><br><br>
 
                 <label for="org">idorg</label><br>
                 <input type="number" id="org" v-model="idorg"><br><br>
 
-                 <label for="design">Design</label><br>
+                <label for="design">Design</label><br>
                 <input type="text" id="design" v-model="design"><br><br>
 
                 <label for="room">Lieu</label><br>
                 <input type="text" id="room" v-model="room"><br><br>
 
                 <div class="years">
-                    <div>
-                        <label for="year">Année univ :</label>
-                    </div>
-                    <div>
-                        <input type="text" id="year" placeholder="2025-2026 " v-model="years">
-                    </div>
+                    <label for="year">Année univ :</label>
+                    <input type="text" id="year" placeholder="2025-2026" v-model="years">
                 </div><br>
 
                 <div class="score">
-                    <div>
-                        <label for="score">Note attribuéé:</label>
-                    </div>
-                    <div>
-                        <input type="number" id="score" placeholder="note/20" v-model="score">
-                    </div>
+                    <label for="score">Note attribuée:</label>
+                    <input type="number" id="score" placeholder="note/20" v-model="score">
                 </div><br>
 
-                <div class="chxFlex">
+                <div class="jury-fields">
                     <div>
-                        <p>Examinateurs :</p>
-                    </div>
+                        <label for="pres">Président du Jury :</label><br>
+                        <input type="text" id="pres" v-model="president" placeholder="Ex: Mr RATIARISON Venot">
+                    </div><br>
                     <div>
-                        <input type="checkbox" id="auditors" class="chx" value="01" v-model="a1">
-                        <label for="auditors">01</label>
-                        <input type="checkbox" id="auditors" class="chx" value="02" v-model="a2">
-                        <label for="auditors">02</label>
-                        <input type="checkbox" id="auditors" class="chx" value="03" v-model="a3">
-                        <label for="auditors">03</label>
-                    </div>
-                </div>
-
-                <div class="chxFlex">
+                        <label for="exam">Examinateur :</label><br>
+                        <input type="text" id="exam" v-model="examinateur" placeholder="Ex: Mr RALAIVAO Jean Christian">
+                    </div><br>
                     <div>
-                        <p>Rapporteurs :</p>
-                    </div>
+                        <label for="rap_int">Rapporteur Interne :</label><br>
+                        <input type="text" id="rap_int" v-model="rapporteur_int" placeholder="Ex: Mme RATIANANTITRA Volatiana">
+                    </div><br>
                     <div>
-                        <input type="checkbox" id="reporters" class="chx" value="01" v-model="r1">
-                        <label for="reporters">01</label>
-                        <input type="checkbox" id="reporters" class="chx" value="02" v-model="r2">
-                        <label for="reporters">02</label>
-                        <input type="checkbox" id="reporters" class="chx" value="03" v-model="r3">
-                        <label for="reporters">03</label>
-                    </div>
-                </div>
-
-               
+                        <label for="rap_ext">Rapporteur Externe :</label><br>
+                        <input type="text" id="rap_ext" v-model="rapporteur_ext" placeholder="Ex: Mr HARIJAONA José">
+                    </div><br>
+                </div><br>
 
                 <div class="finalBtn">
                     <button type="reset" class="btnReset"><img src="@/assets/icons8-rendez-vous-périodique-24.png" alt=""></button>
                     <button type="submit" class="btnSubmit">Valider</button>
-                    <button @click="printPdf" id="downloadPdf"><img src="@/assets/icons8-pdf-2-36.png" alt=""></button>
+                    <button @click="printPdf($event)" id="downloadPdf"><img src="@/assets/icons8-pdf-2-36.png" alt=""></button>
                 </div>
-
             </div>
-
         </div>
-            
     </form>
-
 </template>
 
 <script setup>
@@ -91,33 +67,51 @@
     const years = ref('')
     const score = ref('')
     const design = ref('')
-    const a1 = ref('')
-    const a2 = ref('')
-    const a3 = ref('')
-    const r1 = ref('')
-    const r2 = ref('')
-    const r3 = ref('')
+    
+    const president = ref('')
+    const examinateur = ref('')
+    const rapporteur_int = ref('')
+    const rapporteur_ext = ref('')
 
-    const submitSession = async()=>{
-        await fetch('http://localhost:8000/session.php',{
+   const submitSession = async () => {
+    try {
+        await fetch('http://localhost:8000/session.php', {
             method: 'POST',
-            headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
                 matr: matr.value,
                 idorg: idorg.value,
                 room: room.value,
                 years: years.value,
                 score: score.value,
-                design: design.value
+                design: design.value,
+                president: president.value,
+                examinateur: examinateur.value,
+                rapporteur_int: rapporteur_int.value,
+                rapporteur_ext: rapporteur_ext.value
             })
-        })
+        });
+        alert("Enregistrement validé !");
+        } catch (error) {
+            console.error(error);
+        }
     }
 
-    const printPdf = ()=> {
+   const printPdf = (event) => {
+
+        event.preventDefault(); 
+        event.stopPropagation();
+
+        if (!matr.value || matr.value.trim() === '') {
+            alert("Veuillez saisir un matricule valide avant de générer le PV.");
+            return;
+        }
+
+
         router.push({
             path: '/pagePdf',
-            query: { matr: matr.value }
-        })
+            query: { matr: matr.value.trim() }
+        });
     }
 </script>
 
@@ -125,7 +119,7 @@
     .sessionContent{
         display: flex;
         justify-content: center;
-        margin-top: 1rem;
+        margin-top: 0;
     }
 
     .container{
