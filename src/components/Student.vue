@@ -38,8 +38,15 @@
         </div>
 
         <div class="pt5">
-           <h4 v-if="selectedClass || selectedLevel || selectedStat">{{ totalStudents }}</h4>
-           <p v-else class="total">{{ totalStudents }} elèves</p>
+           <h4 v-if="selectedClass || selectedLevel || selectedStat">
+                <div>
+                    <img src="../assets/icons8-carte-d'identité-32.png" alt="">
+                </div>
+                <div>
+                    {{ totalStudents }}
+                </div>
+           </h4>
+           <p v-else class="total"><img src="../assets/icons8-carte-d'identité-32.png" alt="">{{ totalStudents }} elèves</p>
         </div>
     </div>
 
@@ -306,5 +313,10 @@ const remove = async (matricule) => {
 
     select{
         border-radius: 5px;
+    }
+
+    .pt5{
+        align-items: center;
+        justify-content: center;
     }
 </style>

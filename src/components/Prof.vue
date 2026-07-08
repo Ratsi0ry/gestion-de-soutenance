@@ -53,26 +53,26 @@
     <div class="section3">
         <table>
             <tr>
-               <th>id</th>
+               <th class="border-left">id</th>
                <th>civilité</th>
                <th>nom</th>
                <th>prenom</th>
-               <th>grade</th>
+               <th class="border-right">grade</th>
             </tr>
             <tr v-for="(prof, index) in profs" :key="index">
                 <td>
                     <span v-if="!edit[index]">{{ prof.idprof }}</span>
                     <input type="text" v-else v-model="prof.idprof">
                 </td>
-                <td>
+                <td class="column">
                     <span v-if="!edit[index]">{{ prof.civilite }}</span>
                     <input type="text" v-else v-model="prof.civilite">
                 </td>
-                <td>
+                <td class="column">
                     <span v-if="!edit[index]">{{ prof.nom }}</span>
                     <input type="text" v-else v-model="prof.nom">
                 </td>
-                <td>
+                <td class="column">
                     <span v-if="!edit[index]">{{ prof.prenom }}</span>
                     <input type="text" v-else v-model="prof.prenom">
                 </td>
@@ -193,10 +193,16 @@
     }
 
     td,th {
-        border: 1px solid black;
         text-align: center;
         padding-left:1.5rem;
         padding-right: 1.5rem;
+    }
+
+     th{
+        padding: 0.5rem;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: rgba(0, 0, 0, 0.87);
+        color: white;
     }
 
     .btnEvent{
@@ -205,6 +211,7 @@
         padding-left:0.5rem ;
         padding-bottom: 1rem;
         gap: 0.5rem;
+        background-color: #f4f6f9;
     }
 
     .item1{
@@ -237,5 +244,29 @@
         border: 0;
         margin-top: 1rem;
         background-color:#f4f6f9;
+    }
+
+    .border-left{
+        border-top-left-radius: 7px;
+    }
+
+    .border-right{
+        border-top-right-radius: 7px;
+    }
+
+    td.column{
+        border-left: 0.5px solid rgb(182, 182, 182);
+        border-right: 0.5px solid rgb(182, 182, 182);
+    }
+
+    select{
+        border-radius: 5px;
+    }
+
+    td {
+        background-color: #cecece;
+        text-align: center;
+        padding-left:1.2rem;
+        padding-right: 1.2rem;
     }
 </style>
