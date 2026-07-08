@@ -50,6 +50,8 @@
                     <button type="submit" class="btnSubmit">Valider</button>
                     <button @click="printPdf($event)" id="downloadPdf"><img src="@/assets/icons8-pdf-2-36.png" alt=""></button>
                 </div>
+
+                <p>hello world!</p>
             </div>
         </div>
     </form>
