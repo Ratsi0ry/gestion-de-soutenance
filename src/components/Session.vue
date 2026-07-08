@@ -5,39 +5,39 @@
                 <p class="logo"><img src="@/assets/icons8-salle-de-réunion-38.png" alt=""></p>
                 
                 <label for="matr">Matricule</label><br>
-                <input type="text" id="matr" v-model="matr"><br><br>
+                <input type="text" id="matr" v-model="matr" required><br><br>
 
                 <label for="org">idorg</label><br>
-                <input type="number" id="org" v-model="idorg"><br><br>
+                <input type="number" id="org" v-model="idorg" required><br><br>
 
                 <label for="design">Design</label><br>
-                <input type="text" id="design" v-model="design"><br><br>
+                <input type="text" id="design" v-model="design" required><br><br>
 
                 <label for="room">Lieu</label><br>
-                <input type="text" id="room" v-model="room"><br><br>
+                <input type="text" id="room" v-model="room" required><br><br>
 
                 <div class="years">
                     <label for="year">Année univ :</label>
-                    <input type="text" id="year" placeholder="2025-2026" v-model="years">
+                    <input type="text" id="year" placeholder="2025-2026" v-model="years" required>
                 </div><br>
 
                 <div class="score">
                     <label for="score">Note attribuée:</label>
-                    <input type="number" id="score" placeholder="note/20" v-model="score">
+                    <input type="number" id="score" placeholder="note/20" v-model="score" min="0" max="20" required>
                 </div><br>
 
                 <div class="jury-fields">
                     <div>
                         <label for="pres">Président du Jury :</label><br>
-                        <input type="text" id="pres" v-model="president" placeholder="Ex: Mr RATIARISON Venot">
+                        <input type="text" id="pres" v-model="president" placeholder="Ex: Mr RATIARISON Venot" required>
                     </div><br>
                     <div>
                         <label for="exam">Examinateur :</label><br>
-                        <input type="text" id="exam" v-model="examinateur" placeholder="Ex: Mr RALAIVAO Jean Christian">
+                        <input type="text" id="exam" v-model="examinateur" placeholder="Ex: Mr RALAIVAO Jean Christian" required>
                     </div><br>
                     <div>
                         <label for="rap_int">Rapporteur Interne :</label><br>
-                        <input type="text" id="rap_int" v-model="rapporteur_int" placeholder="Ex: Mme RATIANANTITRA Volatiana">
+                        <input type="text" id="rap_int" v-model="rapporteur_int" placeholder="Ex: Mme RATIANANTITRA Volatiana" required>
                     </div><br>
                     <div>
                         <label for="rap_ext">Rapporteur Externe :</label><br>
@@ -50,8 +50,6 @@
                     <button type="submit" class="btnSubmit">Valider</button>
                     <button @click="printPdf($event)" id="downloadPdf"><img src="@/assets/icons8-pdf-2-36.png" alt=""></button>
                 </div>
-
-                <p>hello world!</p>
             </div>
         </div>
     </form>
@@ -109,8 +107,7 @@
             return;
         }
 
-
-        router.push({
+            router.push({
             path: '/pagePdf',
             query: { matr: matr.value.trim() }
         });

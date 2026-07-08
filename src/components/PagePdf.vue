@@ -4,15 +4,15 @@
         <h3 class="putCenter">PROCÈS-VERBAL</h3>
         <h4 class="putCenter">SOUTENANCE DE FIN D'ÉTUDES POUR L'OBTENTION DU {{ diplome}}</h4>
         <h4 class="putCenter"><b>Mention :</b> Informatique</h4>
-        <h4 class="putCenter"><b>Parcours :</b> {{ info.class }}</h4><br><br>
+        <h4 class="putCenter"><b>Parcours :</b> {{ info.parcours }}</h4><br><br>
 
         <div class="text">
-            <h4>{{ info.civilite }} {{ info.name }} {{ info.fstName }}</h4>
+            <h4>{{ info.civilite }} {{ info.nom }} {{ info.prenom }}</h4>
 
             <p>a soutenu publiquement son mémoire de fin d'études pour l'obtention du {{ diplome.toLowerCase() }}.</p>
 
             <p>Après délibération, la commission des membres du Jury a attribué la note de : 
-            <strong>{{ info.score }}/20</strong></p><br>
+            <strong>{{ info.note }}/20</strong></p><br>
 
             <p><u>Membres du Jury :</u></p>
             <p><b>Président :</b> {{ info.president }}</p>   

@@ -3,7 +3,7 @@
     <div class="item1">
         <div class="pt1">
             <label for="search"></label>
-            <input type="search" id="search" v-model="search" placeholder="Rechercher nom/matricule">
+            <input type="search" id="search" v-model="search" class="search" placeholder="Rechercher nom/matricule">
         </div>
 
         <div class="pt2">
@@ -38,15 +38,8 @@
         </div>
 
         <div class="pt5">
-           <h4 v-if="selectedClass || selectedLevel || selectedStat">
-                <div>
-                    <img src="../assets/icons8-carte-d'identité-32.png" alt="">
-                </div>
-                <div>
-                    {{ totalStudents }}
-                </div>
-           </h4>
-           <p v-else class="total"><img src="../assets/icons8-carte-d'identité-32.png" alt="">{{ totalStudents }} elèves</p>
+           <h3 v-if="selectedClass || selectedLevel || selectedStat">{{ totalStudents }} élèves</h3>
+           <h3 v-else class="total">{{ totalStudents }} elèves</h3>
         </div>
     </div>
 
@@ -201,6 +194,10 @@ const remove = async (matricule) => {
 </script>
 <style scoped>
 
+    label{
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
     .item2{
         display: flex;
         gap: 2rem;
@@ -222,7 +219,7 @@ const remove = async (matricule) => {
     }
 
     td {
-        background-color: #cecece;
+        background-color: #dee4e1;
         text-align: center;
         padding-left:1.2rem;
         padding-right: 1.2rem;
@@ -278,7 +275,7 @@ const remove = async (matricule) => {
     th{
         padding: 0.5rem;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: rgba(0, 0, 0, 0.87);
+        background-color: rgba(20, 20, 20, 0.87);
         color: white;
     }
 
@@ -307,8 +304,8 @@ const remove = async (matricule) => {
     }
 
     td.column{
-        border-left: 0.5px solid rgb(182, 182, 182);
-        border-right: 0.5px solid rgb(182, 182, 182);
+        border-left: 0.5px solid rgb(199, 199, 199);
+        border-right: 0.5px solid rgb(199, 199, 199);;
     }
 
     select{
@@ -316,7 +313,27 @@ const remove = async (matricule) => {
     }
 
     .pt5{
-        align-items: center;
         justify-content: center;
+        display: flex;
+    }
+
+    h3{
+        font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+        color: #161616;
+    }
+
+    input.search{
+        background-color: #f2f3f3;
+        text-align: center;
+    }
+
+    input{
+        width: 5rem;
+        background-color: #d3d6dd;
+        border: 0;
+        font-weight: bold;
+        text-align: center;
+        color: #161616;
+        border-radius: 5px;
     }
 </style>

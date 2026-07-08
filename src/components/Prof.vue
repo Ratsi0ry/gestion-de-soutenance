@@ -9,11 +9,13 @@
                     id="searchProf"
                     v-model="$look_for"
                     @input="search"
-                    placeholder="nom/id">
+                    placeholder="nom/id
+                    "
+                    class="search">
             </div>
 
             <div>
-                <h3>Nombre de profeseurs : {{ profs.length }}</h3>
+                <h3>{{ profs.length }} professeurs</h3>
             </div>
         </div>
 
@@ -180,6 +182,11 @@
 
 </script>
 <style scoped>
+
+    label{
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
     .section1{
         display: flex;
         gap: 0.5rem;
@@ -201,7 +208,7 @@
      th{
         padding: 0.5rem;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: rgba(0, 0, 0, 0.87);
+        background-color: rgba(20, 20, 20, 0.87);
         color: white;
     }
 
@@ -234,12 +241,6 @@
         margin-left: 3.4rem;
     }
 
-    #searchProf{
-        border-radius: 8px;
-        padding: 0.3rem;
-        border: 1px solid #a7a8aa;
-    }
-
     .update, .delete{
         border: 0;
         margin-top: 1rem;
@@ -255,8 +256,8 @@
     }
 
     td.column{
-        border-left: 0.5px solid rgb(182, 182, 182);
-        border-right: 0.5px solid rgb(182, 182, 182);
+        border-left: 0.5px solid rgb(199, 199, 199);
+        border-right: 0.5px solid rgb(199, 199, 199);;
     }
 
     select{
@@ -264,9 +265,30 @@
     }
 
     td {
-        background-color: #cecece;
+        background-color: #dee4e1;
         text-align: center;
         padding-left:1.2rem;
         padding-right: 1.2rem;
+    }
+
+    h3{
+        font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+        color: #161616;
+    }
+
+    input{
+        width: 5rem;
+        background-color: #d3d6dd;
+        border: 0;
+        font-weight: bold;
+        text-align: center;
+        color: #161616;
+        border-radius: 5px;
+    }
+
+    input.search{
+        background-color: #f2f3f3;
+        text-align: center;
+        border: 0.5px solid #b6aeae;
     }
 </style>
