@@ -4,11 +4,16 @@
 
             <div>
                 <label for="searchProf">Rechercher :</label>
-                <input type="search"  id="searchProf" placeholder="nom/id">
+                <input 
+                    type="search"
+                    id="searchProf"
+                    v-model="$look_for"
+                    @input="search"
+                    placeholder="nom/id">
             </div>
 
             <div>
-                <h3>Nombre de proffeuseurs</h3>
+                <h3>Nombre de profeseurs : {{ profs.length }}</h3>
             </div>
         </div>
 
@@ -54,29 +59,33 @@
                <th>prenom</th>
                <th>grade</th>
             </tr>
-            <tr v-for="prof in profs" :key="prof.idprof">
+            <tr v-for="(prof, index) in profs" :key="index">
                 <td>
-                    <span v-if="!edit[prof.idprof]">{{ prof.idprof }}</span>
+                    <span v-if="!edit[index]">{{ prof.idprof }}</span>
                     <input type="text" v-else v-model="prof.idprof">
                 </td>
                 <td>
-                    <span v-if="!edit[prof.civilite]">{{ prof.civilite }}</span>
+                    <span v-if="!edit[index]">{{ prof.civilite }}</span>
                     <input type="text" v-else v-model="prof.civilite">
                 </td>
                 <td>
-                    <span v-if="!edit[prof.nom]">{{ prof.nom }}</span>
+                    <span v-if="!edit[index]">{{ prof.nom }}</span>
                     <input type="text" v-else v-model="prof.nom">
                 </td>
                 <td>
-                    <span v-if="!edit[prof.prenom]">{{ prof.prenom }}</span>
+                    <span v-if="!edit[index]">{{ prof.prenom }}</span>
                     <input type="text" v-else v-model="prof.prenom">
                 </td>
                 <td>
-                    <span v-if="!edit[prof.grade]">{{ prof.grade }}</span>
+                    <span v-if="!edit[index]">{{ prof.grade }}</span>
                     <input type="text" v-else v-model="prof.grade">
                 </td>
                 <td class="btnEvent">
-                    <button @click="update(prof)" class="update"><img src="@/assets/icons8-modifier-24.png"></button>
+                    <button v-if="!edit[index]" @click="startEdit(index, prof.idprof)" class="update"><img src="@/assets/icons8-modifier-24.png">{{ edit[index] ? 'sauvegarder' : ''}}</button>
+                    <div v-else class="buttonGroup">
+                        <button @click="update(prof, condition, index)" class="update">Sauvegarder</button>
+                        <button @click="edit[index] = false" class="cancel">Annuler</button>
+                    </div>
                     <button @click="remove(prof.idprof)" class="delete"><img src="@/assets/icons8-supprimer-24.png"></button>
                 </td>
             </tr>   
@@ -90,6 +99,8 @@
     const profs = ref([]);
     const show = ref(false);
     const edit = ref({});
+    const condition = ref('');
+    const $look_for = ref('');
 
     const get_professors = async () => {
         try {
@@ -108,6 +119,10 @@
     });
 
     const remove = async (idprof) => {
+        const confirmation = window.confirm("Êtes-vous sûr de vouloir supprimer ce professeur ?");
+        if (!confirmation) {
+            return;
+        }
         try {
             const response = await fetch(`http://localhost:8000/profs.php?idprof=${idprof}`, {
                 method: 'DELETE'
@@ -124,9 +139,9 @@
         }
     }
 
-    const update = async (prof) => {
+    const update = async (prof, condition, index) => {
         try {
-            const response = await fetch(`http://localhost:8000/profs.php`, {
+            const response = await fetch(`http://localhost:8000/profs.php?condition=${condition}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -136,6 +151,7 @@
             const result = await response.json();
             if (result.status === 'success') {
                 alert('Professeur mis à jour avec succès!');
+                edit.value[index] = false;
                 get_professors();
             } else {
                 alert("Erreur lors de la mise à jour du professeur.");
@@ -145,7 +161,22 @@
         }
     }
 
-
+    const search = async () => {
+        try {
+            const response = await fetch(`http://localhost:8000/profs.php?look=${$look_for.value}`, {
+                method: 'SEARCH'
+            });
+            const prof_list = await response.json();
+            profs.value = prof_list;
+        } catch (error) {
+            alert("Erreur lors de la recherche des professeurs.");
+        }
+    }
+    
+    const startEdit = (index, i) => {
+        condition.value = i;
+        edit.value[index] = true;
+    }
 
 </script>
 <style scoped>

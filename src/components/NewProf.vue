@@ -86,7 +86,7 @@
                 alert("Erreur lors de l'ajout du professeur.");
             } 
             else if (request.status === 'exist') {
-                alert('Le professeur existe déjà.');
+                alert("L'id existe déjà.");
             }
         } catch (error) {
             console.error('Erreur lors de la requête');

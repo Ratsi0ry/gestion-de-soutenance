@@ -3,7 +3,7 @@
     <div class="item1">
         <div class="pt1">
             <label for="search"></label>
-            <input type="search" id="search" v-model="search" placeholder=" Rechercher nom/matricule">
+            <input type="search" id="search" v-model="search" placeholder="Rechercher nom/matricule">
         </div>
 
         <div class="pt2">
@@ -46,36 +46,36 @@
     <div class="item3">
         <table>
         <tr>
-            <th>Matricule</th>
+            <th class="border-left">Matricule</th>
             <th>Nom</th>
             <th>prenom</th>
             <th>Niveau</th>
             <th>parcours</th>
             <th>Email</th>
             <th>anne_univ</th>
-            <th>note</th>   
+            <th class="border-right">note</th>   
         </tr>
 
         <tr v-for="student in filteredStudents" :key="student.matricule">
             <td>
                 <span>{{ student.matricule }}</span>
             </td>
-            <td>
+            <td class="column">
                 <span>{{ student.nom }}</span>
             </td>
-            <td>
+            <td class="column">
                 <span>{{ student.prenom }}</span>
             </td>
-            <td>
+            <td class="column">
                 <span>{{ student.niveau }}</span>
             </td>
-            <td>
+            <td class="column">
                 <span>{{ student.parcours }}</span>
             </td>
-            <td>
+            <td class="column">
                 <span>{{ student.adr_email }}</span>
             </td>
-            <td>
+            <td class="column">
                 <span>{{ student.annee_univ ? student.annee_univ : ''}}</span>
             </td>
             <td>
@@ -215,7 +215,7 @@ const remove = async (matricule) => {
     }
 
     td {
-        border: 1px solid black;
+        background-color: #cecece;
         text-align: center;
         padding-left:1.2rem;
         padding-right: 1.2rem;
@@ -237,6 +237,7 @@ const remove = async (matricule) => {
         padding-left:0.5rem ;
         padding-bottom: 1rem;
         gap: 0.5rem;
+        background-color: #f4f6f9;
     }
 
     .nivClass {
@@ -272,7 +273,6 @@ const remove = async (matricule) => {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         background-color: rgba(0, 0, 0, 0.87);
         color: white;
-        border: 1px solid black;
     }
 
     input.put:hover{
@@ -289,5 +289,22 @@ const remove = async (matricule) => {
     p.total{
         font-size: large;
         padding: 1rem;
+    }
+
+    .border-left{
+        border-top-left-radius: 7px;
+    }
+
+    .border-right{
+        border-top-right-radius: 7px;
+    }
+
+    td.column{
+        border-left: 0.5px solid rgb(182, 182, 182);
+        border-right: 0.5px solid rgb(182, 182, 182);
+    }
+
+    select{
+        border-radius: 5px;
     }
 </style>
