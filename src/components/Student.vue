@@ -38,8 +38,15 @@
         </div>
 
         <div class="pt5">
-           <h3 v-if="selectedClass || selectedLevel || selectedStat">{{ totalStudents }} élèves</h3>
-           <h3 v-else class="total">{{ totalStudents }} elèves</h3>
+           <h4 v-if="selectedClass || selectedLevel || selectedStat">
+                <div>
+                    <img src="../assets/icons8-carte-d'identité-32.png" alt="">
+                </div>
+                <div>
+                    {{ totalStudents }}
+                </div>
+           </h4>
+           <p v-else class="total"><img src="../assets/icons8-carte-d'identité-32.png" alt="">{{ totalStudents }} elèves</p>
         </div>
     </div>
 
@@ -48,42 +55,53 @@
         <tr>
             <th class="border-left">Matricule</th>
             <th>Nom</th>
-            <th>prenom</th>
+            <th>Prenom</th>
             <th>Niveau</th>
             <th>parcours</th>
             <th>Email</th>
-            <th>anne_univ</th>
-            <th class="border-right">note</th>   
+            <th>Année universitaire</th>
+            <th class="border-right">Note</th>   
         </tr>
 
-        <tr v-for="student in filteredStudents" :key="student.matricule">
+        <tr v-for="(student, index) in filteredStudents" :key="student.matricule">
             <td>
                 <span>{{ student.matricule }}</span>
             </td>
             <td class="column">
-                <span>{{ student.nom }}</span>
+                <span v-if="!edit[index]">{{ student.nom }}</span>
+                <input type="text" v-else v-model="student.nom">
             </td>
             <td class="column">
-                <span>{{ student.prenom }}</span>
+                <span v-if="!edit[index]">{{ student.prenom }}</span>
+                <input type="text" v-else v-model="student.prenom">
             </td>
             <td class="column">
-                <span>{{ student.niveau }}</span>
+                <span v-if="!edit[index]">{{ student.niveau }}</span>
+                <input type="text" v-else v-model="student.niveau">
             </td>
             <td class="column">
-                <span>{{ student.parcours }}</span>
+                <span v-if="!edit[index]">{{ student.parcours }}</span>
+                <input type="text" v-else v-model="student.parcours">
             </td>
             <td class="column">
-                <span>{{ student.adr_email }}</span>
+                <span v-if="!edit[index]">{{ student.adr_email }}</span>
+                <input type="text" v-else v-model="student.adr_email">
             </td>
             <td class="column">
-                <span>{{ student.annee_univ ? student.annee_univ : ''}}</span>
+                <span v-if="!edit[index]">{{ student.annee_univ ? student.annee_univ : ''}}</span>
+                <input type="text" v-else v-model="student.annee_univ">
             </td>
             <td>
-                <span v-if="student.note !==  null">{{ student.note }}</span>
+                <span v-if="!edit[index] ">{{ student.note }}</span>
+                <input type="text" v-else v-model="student.note">
             </td>
-            <td class="btnEvent">
-                <button @click="update(student)" class="update"><img src="@/assets/icons8-modifier-24.png"></button>
-                <button @click="remove(student.matricule)" class="delete"><img src="@/assets/icons8-supprimer-24.png"></button>
+                <td class="btnEvent">
+                    <button v-if="!edit[index]" @click="startEdit(index)" class="update"><img src="@/assets/icons8-modifier-24.png"></button>
+                        <div v-else class="buttonGroup">
+                            <button @click="update(student, index)" class="confirm"><img src="@/assets/confirm.png"></button>
+                            <button @click="edit[index] = false" class="cancel"><img src="@/assets/cancel.png"></button>
+                        </div>
+                    <button @click="remove(student.matricule)" class="delete"><img src="@/assets/icons8-supprimer-24.png"></button>
             </td> 
         </tr>
     </table>
@@ -101,6 +119,7 @@ const search = ref('')
 const selectedLevel = ref('')
 const selectedClass = ref('')
 const selectedStat = ref('')
+const edit = ref({})
 
 const fetchStudents = async () => {
     try {
@@ -142,21 +161,22 @@ const filteredStudents = computed(() => {
 
 const totalStudents = computed(() => filteredStudents.value.length);
 
-const update = async (student) => {
-  const nom = prompt("Modifier le nom :", student.nom || '');
-  const prenom = prompt("Modifier le prenom :", student.prenom || '');
-  const niveau = prompt("Modifier le niveau: ", student.niveau || '');
-  const parcours = prompt("Modifier le parcours: ", student.parcours || '');
-  const email = prompt("Modifier l'email :", student.adr_email || '');
-  const annee = prompt("Modifier l'année universitaire :", student.annee_univ || '');
-  const note = prompt("Modifier la note :", student.note !== null ? student.note : '');
+const update = async (student, index) => {
+  const matricule = student.matricule;
+  const nom = student.nom;
+  const prenom = student.prenom;
+  const niveau = student.niveau;
+  const parcours = student.parcours;
+  const email = student.adr_email;
+  const annee = student.annee_univ;
+  const note = student.note;
 
   if (nom !== null && prenom !== null && niveau !== null && parcours !== null && email !== null && annee !== null && note !== null) {
     await fetch('http://localhost:8000/updateStudent.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        matricule: student.matricule,
+        matricule,
         nom,
         prenom,
         niveau,
@@ -166,8 +186,14 @@ const update = async (student) => {
         note: note === "" ? null : note
       })
     });
+    edit.value[index] = false;
+    alert("Mise à jour effectuée avec succès");
     fetchStudents();
   }
+}
+
+const startEdit = (index) => {
+    edit.value[index] = true;
 }
 
 const remove = async (matricule) => {
@@ -187,15 +213,15 @@ const remove = async (matricule) => {
         alert("Erreur retournée par le serveur PHP : " + result.error);
       }
     } catch (error) {
-      alert("Erreur de connexion avec deleteStudent.php : " + error);
+      console.log("Erreur de connexion avec removeStudent.php : " + error);
     }
   }
 }
 </script>
 <style scoped>
-
-    label{
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    .buttonGroup {
+    display: flex;
+    background-color:#f4f6f9;
     }
 
     .item2{
@@ -219,7 +245,7 @@ const remove = async (matricule) => {
     }
 
     td {
-        background-color: #dee4e1;
+        background-color: #cecece;
         text-align: center;
         padding-left:1.2rem;
         padding-right: 1.2rem;
@@ -275,7 +301,7 @@ const remove = async (matricule) => {
     th{
         padding: 0.5rem;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: rgba(20, 20, 20, 0.87);
+        background-color: rgba(0, 0, 0, 0.87);
         color: white;
     }
 
@@ -304,8 +330,8 @@ const remove = async (matricule) => {
     }
 
     td.column{
-        border-left: 0.5px solid rgb(199, 199, 199);
-        border-right: 0.5px solid rgb(199, 199, 199);;
+        border-left: 0.5px solid rgb(182, 182, 182);
+        border-right: 0.5px solid rgb(182, 182, 182);
     }
 
     select{
@@ -313,18 +339,20 @@ const remove = async (matricule) => {
     }
 
     .pt5{
+        align-items: center;
         justify-content: center;
-        display: flex;
+    }
+
+    td {
+        background-color: #dee4e1;
+        text-align: center;
+        padding-left:1.2rem;
+        padding-right: 1.2rem;
     }
 
     h3{
         font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
         color: #161616;
-    }
-
-    input.search{
-        background-color: #f2f3f3;
-        text-align: center;
     }
 
     input{
@@ -335,5 +363,11 @@ const remove = async (matricule) => {
         text-align: center;
         color: #161616;
         border-radius: 5px;
+    }
+
+    input.search{
+        background-color: #f2f3f3;
+        text-align: center;
+        border: 0.5px solid #b6aeae;
     }
 </style>

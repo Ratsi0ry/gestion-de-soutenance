@@ -186,7 +186,7 @@
     label{
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-
+    
     .section1{
         display: flex;
         gap: 0.5rem;
