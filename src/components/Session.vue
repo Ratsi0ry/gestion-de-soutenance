@@ -59,6 +59,7 @@
     import { useRouter } from 'vue-router'
     import { ref } from 'vue'
 
+
     const router = useRouter()
 
     const matr = ref('')
@@ -75,7 +76,7 @@
 
    const submitSession = async () => {
     try {
-        await fetch('http://localhost:8000/session.php', {
+         const response = await fetch('http://localhost:8000/session.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -90,10 +91,18 @@
                 rapporteur_int: rapporteur_int.value,
                 rapporteur_ext: rapporteur_ext.value
             })
-        });
-        alert("Enregistrement validé !");
+        })
+
+        const result = await response.json()
+
+            if(result.status == 'success'){
+                alert("Nouvelle session effectué avec success!")
+            } else {
+                alert("La session n'est pas valide correctement")
+            }
+
         } catch (error) {
-            console.error(error);
+            console.error("Erreur de session");
         }
     }
 
@@ -190,10 +199,6 @@
         border: green;
         border-radius: 8px;
         padding: 0.5rem;
-    }
-    .btnSubmit:active, .btnReset:active{
-        transform: scale(0);
-        transition: 0.2s ease-in-out;
     }
 
     .logo{
