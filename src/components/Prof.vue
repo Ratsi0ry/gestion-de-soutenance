@@ -85,8 +85,8 @@
                 <td class="btnEvent">
                     <button v-if="!edit[index]" @click="startEdit(index, prof.idprof)" class="update"><img src="@/assets/icons8-modifier-24.png">{{ edit[index] ? 'sauvegarder' : ''}}</button>
                     <div v-else class="buttonGroup">
-                        <button @click="update(prof, condition, index)" class="update">Sauvegarder</button>
-                        <button @click="edit[index] = false" class="cancel">Annuler</button>
+                        <button @click="update(prof, condition, index)" class="confirm"><img src="@/assets/icons8-coche-24.png"></button>
+                        <button @click="edit[index] = false" class="cancel"><img src="@/assets/icons8-annuler-24.png"></button>
                     </div>
                     <button @click="remove(prof.idprof)" class="delete"><img src="@/assets/icons8-supprimer-24.png"></button>
                 </td>
@@ -243,7 +243,6 @@
 
     .update, .delete{
         border: 0;
-        margin-top: 1rem;
         background-color:#f4f6f9;
     }
 
@@ -290,5 +289,10 @@
         background-color: #f2f3f3;
         text-align: center;
         border: 0.5px solid #b6aeae;
+    }
+
+    .confirm, .cancel{
+        border: 0;
+        background-color:#f4f6f9;
     }
 </style>

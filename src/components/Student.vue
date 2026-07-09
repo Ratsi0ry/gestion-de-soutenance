@@ -38,15 +38,8 @@
         </div>
 
         <div class="pt5">
-           <h4 v-if="selectedClass || selectedLevel || selectedStat">
-                <div>
-                    <img src="../assets/icons8-carte-d'identité-32.png" alt="">
-                </div>
-                <div>
-                    {{ totalStudents }}
-                </div>
-           </h4>
-           <p v-else class="total"><img src="../assets/icons8-carte-d'identité-32.png" alt="">{{ totalStudents }} elèves</p>
+           <h3 v-if="selectedClass || selectedLevel || selectedStat">{{ totalStudents }}</h3>
+           <h3 v-else class="total">{{ totalStudents }} elèves</h3>
         </div>
     </div>
 
@@ -98,8 +91,8 @@
                 <td class="btnEvent">
                     <button v-if="!edit[index]" @click="startEdit(index)" class="update"><img src="@/assets/icons8-modifier-24.png"></button>
                         <div v-else class="buttonGroup">
-                            <button @click="update(student, index)" class="confirm"><img src="@/assets/confirm.png"></button>
-                            <button @click="edit[index] = false" class="cancel"><img src="@/assets/cancel.png"></button>
+                            <button @click="update(student, index)" class="confirm"><img src="@/assets/icons8-coche-24.png"></button>
+                            <button @click="edit[index] = false" class="cancel"><img src="@/assets/icons8-annuler-24.png"></button>
                         </div>
                     <button @click="remove(student.matricule)" class="delete"><img src="@/assets/icons8-supprimer-24.png"></button>
             </td> 
@@ -369,5 +362,11 @@ const remove = async (matricule) => {
         background-color: #f2f3f3;
         text-align: center;
         border: 0.5px solid #b6aeae;
+        width: auto;
+    }
+
+    .confirm, .cancel{
+        border: 0;
+        background-color:#f4f6f9;
     }
 </style>
