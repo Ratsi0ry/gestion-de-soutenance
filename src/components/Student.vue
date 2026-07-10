@@ -38,7 +38,7 @@
         </div>
 
         <div class="pt5">
-           <h3 v-if="selectedClass || selectedLevel || selectedStat">{{ totalStudents }}</h3>
+           <h3 v-if="selectedClass || selectedLevel || selectedStat">{{ totalStudents }} elèves</h3>
            <h3 v-else class="total">{{ totalStudents }} elèves</h3>
         </div>
     </div>
@@ -164,7 +164,7 @@ const update = async (student, index) => {
   const annee = student.annee_univ;
   const note = student.note;
 
-  if (nom !== null && prenom !== null && niveau !== null && parcours !== null && email !== null && annee !== null && note !== null) {
+  if (nom !== null && prenom !== null && niveau !== null && parcours !== null && email !== null) {
     await fetch('http://localhost:8000/updateStudent.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
