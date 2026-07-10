@@ -92,7 +92,7 @@
                     <button v-if="!edit[index]" @click="startEdit(index)" class="update"><img src="@/assets/icons8-modifier-24.png"></button>
                         <div v-else class="buttonGroup">
                             <button @click="update(student, index)" class="confirm"><img src="@/assets/icons8-coche-24.png"></button>
-                            <button @click="edit[index] = false" class="cancel"><img src="@/assets/icons8-annuler-24.png"></button>
+                            <button @click="stopEdit(index)" class="cancel"><img src="@/assets/icons8-annuler-24.png"></button>
                         </div>
                     <button @click="remove(student.matricule)" class="delete"><img src="@/assets/icons8-supprimer-24.png"></button>
             </td> 
@@ -187,6 +187,11 @@ const update = async (student, index) => {
 
 const startEdit = (index) => {
     edit.value[index] = true;
+}
+
+const stopEdit = (index) => {
+    edit.value[index] = false;
+    fetchStudents();
 }
 
 const remove = async (matricule) => {

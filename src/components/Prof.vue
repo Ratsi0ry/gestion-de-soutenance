@@ -85,8 +85,8 @@
                 <td class="btnEvent">
                     <button v-if="!edit[index]" @click="startEdit(index, prof.idprof)" class="update"><img src="@/assets/icons8-modifier-24.png">{{ edit[index] ? 'sauvegarder' : ''}}</button>
                     <div v-else class="buttonGroup">
-                        <button @click="update(prof, condition, index)" class="confirm"><img src="@/assets/icons8-coche-24.png"></button>
-                        <button @click="edit[index] = false" class="cancel"><img src="@/assets/icons8-annuler-24.png"></button>
+                        <button @click="update(prof, condition, index)" class="confirm"><img src="@/assets/icons8-vérifié-24.png"></button>
+                        <button @click="stopEdit(index)" class="cancel"><img src="@/assets/icons8-annuler-24.png"></button>
                     </div>
                     <button @click="remove(prof.idprof)" class="delete"><img src="@/assets/icons8-supprimer-24.png"></button>
                 </td>
@@ -180,6 +180,11 @@
         edit.value[index] = true;
     }
 
+    const stopEdit = (index) => {
+        edit.value[index] = false;
+        get_professors();
+    }
+
 </script>
 <style scoped>
 
@@ -189,8 +194,6 @@
     
     .section1{
         display: flex;
-        gap: 0.5rem;
-        align-items: center;
     }
 
     table{
@@ -271,7 +274,7 @@
     }
 
     h3{
-        font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         color: #161616;
     }
 
@@ -287,8 +290,10 @@
 
     input.search{
         background-color: #f2f3f3;
-        text-align: center;
         border: 0.5px solid #b6aeae;
+        text-align: left;
+        padding: 0.3rem;
+        width: 12rem;
     }
 
     .confirm, .cancel{
